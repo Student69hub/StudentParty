@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ผลงาน | พรรคนักเรียน</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="chatbot.css">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+</head>
+
+<body>
+    <nav class="nav">
+        <div class="nav-inner">
+            <a href="index.html" class="nav-logo">
+                <img src="assets/favicon.png" alt="โลโก้พรรคนักเรียน" class="nav-logo-img">
+                <span class="nav-logo-text">พรรคนักเรียน</span>
+            </a>
+            <button type="button" class="nav-toggle" id="nav-toggle" aria-label="เปิดเมนู">
+                <span></span><span></span><span></span>
+            </button>
+            <ul class="nav-links" id="nav-links">
+                <li><a href="index.html">หน้าแรก</a></li>
+                <li><a href="policy.html">นโยบาย</a></li>
+                <li class="nav-item-dropdown">
+                    <a href="#" class="nav-dropdown-toggle">กิจกรรม ▾</a>
+                    <ul class="nav-dropdown-menu">
+                        <li><a href="esports.html">E-Sports</a></li>
+                        <li><a href="achievements.html" class="active">ผลงาน</a></li>
+                    </ul>
+                </li>
+
+
+                <li class="nav-item-dropdown">
+                    <a href="#" class="nav-dropdown-toggle">ความคิดเห็น ▾</a>
+                    <ul class="nav-dropdown-menu">
+                        <li><a href="feedback.html">ส่งความเห็น</a></li>
+                        <li><a href="idea-board.html">กระดานไอเดีย</a></li>
+                        <li><a href="feedback-replies.html">การตอบกลับจากแอดมิน</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <main id="main-content" class="page-enter">
+        <section class="premium-hero">
+            <style>
+                .premium-hero {
+                    position: relative;
+                    padding: 7rem 1.5rem 4rem;
+                    text-align: center;
+                    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+                    color: white;
+                    overflow: hidden;
+                    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+                }
+
+                /* Animated background orbs for the hero */
+                .premium-hero::before,
+                .premium-hero::after {
+                    content: '';
+                    position: absolute;
+                    border-radius: 50%;
+                    filter: blur(60px);
+                    z-index: 0;
+                    opacity: 0.6;
+                    animation: float-hero 10s ease-in-out infinite alternate;
+                }
+
+                .premium-hero::before {
+                    width: 300px;
+                    height: 300px;
+                    background: rgba(255, 115, 0, 0.3);
+                    top: -100px;
+                    left: -50px;
+                }
+
+                .premium-hero::after {
+                    width: 400px;
+                    height: 400px;
+                    background: rgba(252, 163, 17, 0.2);
+                    bottom: -150px;
+                    right: -100px;
+                    animation-duration: 15s;
+                    animation-delay: -5s;
+                }
+
+                @keyframes float-hero {
+                    0% {
+                        transform: translate(0, 0) scale(1);
+                    }
+
+                    100% {
+                        transform: translate(20px, 30px) scale(1.1);
+                    }
+                }
+
+                .premium-hero .container {
+                    position: relative;
+                    z-index: 1;
+                }
+
+                .hero-badge {
+                    display: inline-block;
+                    padding: 0.4rem 1rem;
+                    background: rgba(255, 115, 0, 0.15);
+                    border: 1px solid rgba(255, 115, 0, 0.3);
+                    color: #fca311;
+                    font-size: 0.85rem;
+                    font-weight: 700;
+                    border-radius: 9999px;
+                    margin-bottom: 1.5rem;
+                    letter-spacing: 0.05em;
+                    text-transform: uppercase;
+                }
+
+                .premium-hero h1 {
+                    font-size: clamp(2.5rem, 5vw, 4rem);
+                    font-weight: 800;
+                    margin-bottom: 1rem;
+                    background: linear-gradient(to right, #ffffff, #cbd5e1);
+                    -webkit-background-clip: text;
+                    background-clip: text;
+                    color: transparent;
+                    letter-spacing: -0.02em;
+                    text-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+                }
+
+                .premium-hero p {
+                    font-size: 1.1rem;
+                    color: #94a3b8;
+                    max-width: 600px;
+                    margin: 0 auto;
+                    line-height: 1.6;
+                }
+            </style>
+            <div class="container" data-aos="fade-up">
+                <span class="hero-badge">OUR PROGRESS</span>
+                <h1>สิ่งที่เราทำแล้ว</h1>
+                <p>ติดตามความคืบหน้าของนโยบายและการดำเนินงานต่างๆ
+                    ที่พรรคนักเรียนได้ริเริ่มเพื่อสร้างการเปลี่ยนแปลงในรั้วโรงเรียนของเรา</p>
+            </div>
+        </section>
+
+        <section class="content-section" style="padding-top: 0;">
+            <div class="container">
+                <style>
+                    .achievement-grid {
+                        display: grid;
+                        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+                        gap: 2rem;
+                        padding-bottom: 4rem;
+                        position: relative;
+                        z-index: 1;
+                    }
+
+                    /* Soft glow effect behind the grid */
+                    .achievement-grid::before {
+                        content: '';
+                        position: absolute;
+                        top: 40%;
+                        left: 50%;
+                        transform: translate(-50%, -50%);
+                        width: 80%;
+                        height: 80%;
+                        background: radial-gradient(circle, rgba(255, 115, 0, 0.08) 0%, transparent 60%);
+                        z-index: -1;
+                        pointer-events: none;
+                    }
+
+                    .achievement-card {
+                        background: rgba(255, 255, 255, 0.85);
+                        backdrop-filter: blur(12px);
+                        -webkit-backdrop-filter: blur(12px);
+                        border-radius: 1.5rem;
+                        padding: 2.5rem 2rem;
+                        box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.08), 0 0 0 1px rgba(255, 115, 0, 0.05) inset;
+                        border-top: 5px solid transparent;
+                        background-clip: padding-box;
+                        position: relative;
+                        transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+                        display: flex;
+                        flex-direction: column;
+                        height: 100%;
+                        overflow: hidden;
+                    }
+
+                    /* Dynamic top border gradient */
+                    .achievement-card::after {
+                        content: '';
+                        position: absolute;
+                        top: 0;
+                        left: 0;
+                        right: 0;
+                        height: 5px;
+                        background: linear-gradient(90deg, #ff7300, #fca311);
+                        transition: height 0.3s ease;
+                    }
+
+                    .achievement-card:hover {
+                        transform: translateY(-8px);
+                        box-shadow: 0 20px 40px -15px rgba(255, 115, 0, 0.15), 0 0 0 1px rgba(255, 115, 0, 0.1) inset;
+                        background: rgba(255, 255, 255, 1);
+                    }
+
+                    .achievement-card:hover::after {
+                        height: 6px;
+                    }
+
+                    .achievement-icon {
+                        width: 56px;
+                        height: 56px;
+                        background: linear-gradient(135deg, rgba(255, 115, 0, 0.1) 0%, rgba(252, 163, 17, 0.1) 100%);
+                        color: #ff7300;
+                        border-radius: 1rem;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        font-size: 1.8rem;
+                        margin-bottom: 1.5rem;
+                        box-shadow: 0 4px 15px rgba(255, 115, 0, 0.1);
+                        transition: transform 0.3s ease;
+                    }
+
+                    .achievement-card:hover .achievement-icon {
+                        transform: scale(1.1) rotate(-5deg);
+                        background: linear-gradient(135deg, #ff7300 0%, #fca311 100%);
+                        color: #fff;
+                        box-shadow: 0 8px 20px rgba(255, 115, 0, 0.3);
+                    }
+
+                    .achievement-title {
+                        font-size: 1.35rem;
+                        font-weight: 800;
+                        color: #0f172a;
+                        margin-bottom: 0.85rem;
+                        line-height: 1.3;
+                        letter-spacing: -0.01em;
+                    }
+
+                    .achievement-desc {
+                        font-size: 0.95rem;
+                        color: #475569;
+                        line-height: 1.65;
+                        flex-grow: 1;
+                        margin-bottom: 1.5rem;
+                    }
+
+                    .achievement-tags {
+                        display: flex;
+                        gap: 0.6rem;
+                        align-items: center;
+                        flex-wrap: wrap;
+                        margin-top: auto;
+                        padding-top: 1rem;
+                        border-top: 1px dashed rgba(0, 0, 0, 0.08);
+                    }
+
+                    .tag-badge {
+                        padding: 0.4rem 0.85rem;
+                        border-radius: 9999px;
+                        font-size: 0.8rem;
+                        font-weight: 700;
+                        letter-spacing: 0.02em;
+                        display: inline-flex;
+                        align-items: center;
+                        gap: 0.3rem;
+                    }
+
+                    .tag-year {
+                        background: #f1f5f9;
+                        color: #334155;
+                    }
+
+                    .tag-success {
+                        background: rgba(16, 185, 129, 0.1);
+                        color: #059669;
+                        border: 1px solid rgba(16, 185, 129, 0.2);
+                    }
+
+                    .tag-pending {
+                        background: rgba(245, 158, 11, 0.1);
+                        color: #d97706;
+                        border: 1px solid rgba(245, 158, 11, 0.2);
+                    }
+                </style>
+                <div class="achievement-grid" data-aos="fade-up">
+
+                    <article class="achievement-card">
+                        <div class="achievement-icon">⚽</div>
+                        <h3 class="achievement-title">จัดการแข่งขัน E-Football</h3>
+                        <p class="achievement-desc">จัดการแข่งขัน E-Football
+                            ภายในโรงเรียนเพื่อสร้างพื้นที่ให้นักเรียนได้แสดงความสามารถด้าน E-Sports
+                            และสร้างความสนุกสนานในรั้วโรงเรียน</p>
+                        <div class="achievement-tags">
+                            <span class="tag-badge tag-year">ปีการศึกษา 2569</span>
+                            <span class="tag-badge tag-pending">⏳ รอดำเนินการ</span>
+                        </div>
+                    </article>
+
+                    <article class="achievement-card">
+                        <div class="achievement-icon">🏫</div>
+                        <h3 class="achievement-title">ประกวดห้องเรียนสะอาด</h3>
+                        <p class="achievement-desc">จัดโครงการประกวดห้องเรียนสะอาด
+                            เพื่อส่งเสริมนิสัยรักความสะอาดและสร้างสภาพแวดล้อมในการเรียนที่ดีให้กับนักเรียนทุกคน</p>
+                        <div class="achievement-tags">
+                            <span class="tag-badge tag-year">ปีการศึกษา 2569</span>
+                            <span class="tag-badge tag-pending">⏳ รอดำเนินการ</span>
+                        </div>
+                    </article>
+
+                    <article class="achievement-card">
+                        <div class="achievement-icon">📢</div>
+                        <h3 class="achievement-title">เปิดช่องทางรับฟังเสียงนักเรียน</h3>
+                        <p class="achievement-desc">เปิดช่องทาง Instagram @students.party_
+                            เพื่อรับข้อเสนอแนะและความคิดเห็นจากนักเรียนอย่างเป็นทางการ พร้อมตอบกลับทุกข้อความ</p>
+                        <div class="achievement-tags">
+                            <span class="tag-badge tag-year">พ.ย. 2569</span>
+                            <span class="tag-badge tag-pending">⏳ รอดำเนินการ</span>
+                        </div>
+                    </article>
+
+                    <article class="achievement-card">
+                        <div class="achievement-icon">🌐</div>
+                        <h3 class="achievement-title">เปิดตัวเว็บไซต์พรรคนักเรียน</h3>
+                        <p class="achievement-desc">สร้างและเปิดตัวเว็บไซต์อย่างเป็นทางการเพื่อเผยแพร่ข้อมูล นโยบาย
+                            และความเคลื่อนไหวของพรรค</p>
+                        <div class="achievement-tags">
+                            <span class="tag-badge tag-year">ปีการศึกษา 2569</span>
+                            <span class="tag-badge tag-success">✓ สำเร็จแล้ว</span>
+                        </div>
+                    </article>
+
+                    <article class="achievement-card">
+                        <div class="achievement-icon">🗣️</div>
+                        <h3 class="achievement-title">ผลักดันนโยบายสิทธินักเรียน</h3>
+                        <p class="achievement-desc">นำเสนอนโยบายสิทธินักเรียนต่อคณะกรรมการโรงเรียน
+                            เพื่อให้นักเรียนมีสิทธิมีเสียงในการตัดสินใจ</p>
+                        <div class="achievement-tags">
+                            <span class="tag-badge tag-year">ปีการศึกษา 2569</span>
+                            <span class="tag-badge tag-pending">⏳ รอดำเนินการ</span>
+                        </div>
+                    </article>
+
+                    <article class="achievement-card">
+                        <div class="achievement-icon">💡</div>
+                        <h3 class="achievement-title">โครงการไม่มีกลิ่น (Zero Smell)</h3>
+                        <p class="achievement-desc">ริเริ่มโครงการรณรงค์ความสะอาดเพื่อสร้างบรรยากาศในห้องเรียนที่ดี
+                            ไม่มีกลิ่นรบกวน ส่งผลต่อบรรยากาศการเรียนที่ดี</p>
+                        <div class="achievement-tags">
+                            <span class="tag-badge tag-year">ปีการศึกษา 2569</span>
+                            <span class="tag-badge tag-pending">⏳ รอดำเนินการ</span>
+                        </div>
+                    </article>
+
+                </div>
+            </div>
+        </section>
+
+        <footer class="footer">
+            <div class="footer-inner">
+                <div class="footer-grid">
+                    <div class="footer-brand">พรรคนักเรียน</div>
+                    <div class="footer-social">
+                        <a href="https://www.instagram.com/students.party_?igsh=NjV6NWlrMzR4dXJu" target="_blank"
+                            rel="noopener noreferrer" class="instagram" title="Instagram">@students.party_</a>
+                    </div>
+                </div>
+                <div class="footer-bottom">
+                    © พรรคนักเรียน — สร้างสรรค์เพื่อนักเรียน โดยนักเรียน
+                </div>
+            </div>
+        </footer>
+    </main>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script type="module" src="chatbot.js"></script>
+    <script src="script.js"></script>
+    <!-- Code injected by live-server -->
+    <script>
+        // <![CDATA[  <-- For SVG support
+        if ('WebSocket' in window) {
+            (function () {
+                function refreshCSS() {
+                    var sheets = [].slice.call(document.getElementsByTagName("link"));
+                    var head = document.getElementsByTagName("head")[0];
+                    for (var i = 0; i < sheets.length; ++i) {
+                        var elem = sheets[i];
+                        var parent = elem.parentElement || head;
+                        parent.removeChild(elem);
+                        var rel = elem.rel;
+                        if (elem.href && typeof rel != "string" || rel.length == 0 || rel.toLowerCase() == "stylesheet") {
+                            var url = elem.href.replace(/(&|\?)_cacheOverride=\d+/, '');
+                            elem.href = url + (url.indexOf('?') >= 0 ? '&' : '?') + '_cacheOverride=' + (new Date().valueOf());
+                        }
+                        parent.appendChild(elem);
+                    }
+                }
+                var protocol = window.location.protocol === 'http:' ? 'ws://' : 'wss://';
+                var address = protocol + window.location.host + window.location.pathname + '/ws';
+                var socket = new WebSocket(address);
+                socket.onmessage = function (msg) {
+                    if (msg.data == 'reload') window.location.reload();
+                    else if (msg.data == 'refreshcss') refreshCSS();
+                };
+                if (sessionStorage && !sessionStorage.getItem('IsThisFirstTime_Log_From_LiveServer')) {
+                    console.log('Live reload enabled.');
+                    sessionStorage.setItem('IsThisFirstTime_Log_From_LiveServer', true);
+                }
+            })();
+        }
+        else {
+            console.error('Upgrade your browser. This Browser is NOT supported WebSocket for Live-Reloading.');
+        }
+        // ]]>
+    </script>
+</body>
+
+</html>

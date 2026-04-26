@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Speed King AI Challenge | พรรคนักเรียน</title>
+    
+    <!-- MediaPipe & Camera Utils -->
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/pose/pose.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js" crossorigin="anonymous"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;600;700&family=Prompt:wght@400;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    
+    <style>
+        :root {
+            --game-orange: #ff7300;
+            --game-glow: rgba(255, 115, 0, 0.5);
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background: #0f172a;
+            color: white;
+            font-family: 'Prompt', sans-serif;
+            overflow-x: hidden;
+        }
+
+        .game-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: radial-gradient(circle at center, #1e293b 0%, #0f172a 100%);
+        }
+
+        #video-container {
+            position: relative;
+            width: 640px;
+            max-width: 95vw;
+            aspect-ratio: 4/3;
+            background: #000;
+            border-radius: 1.5rem;
+            overflow: hidden;
+            box-shadow: 0 0 50px rgba(255, 115, 0, 0.2);
+            border: 4px solid var(--game-orange);
+        }
+
+        #input_video {
+            display: none; /* Hidden, we draw on canvas */
+        }
+
+        #output_canvas {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transform: scaleX(-1); /* Mirror effect */
+        }
+
+        .hud {
+            position: absolute;
+            top: 2rem;
+            left: 2rem;
+            right: 2rem;
+            display: flex;
+            justify-content: space-between;
+            z-index: 10;
+            pointer-events: none;
+        }
+
+        .stat-box {
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(10px);
+            padding: 1rem 2rem;
+            border-radius: 1rem;
+            border: 1px solid rgba(255, 115, 0, 0.3);
+            text-align: center;
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            color: #94a3b8;
+            margin-bottom: 0.2rem;
+            font-weight: 700;
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--game-orange);
+            text-shadow: 0 0 15px var(--game-glow);
+        }
+
+        .game-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.9);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .btn-start {
+            background: var(--game-orange);
+            color: white;
+            border: none;
+            padding: 1.2rem 3rem;
+            font-size: 1.5rem;
+            font-weight: 800;
+            border-radius: 9999px;
+            cursor: pointer;
+            box-shadow: 0 10px 25px var(--game-glow);
+            transition: all 0.3s ease;
+            font-family: 'Prompt', sans-serif;
+        }
+
+        .btn-start:hover {
+            transform: scale(1.1);
+            box-shadow: 0 15px 35px var(--game-glow);
+        }
+
+        .loading-text {
+            color: var(--game-orange);
+            font-size: 1.2rem;
+            margin-top: 1rem;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .rep-count-anim {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 8rem;
+            font-weight: 900;
+            color: white;
+            opacity: 0;
+            pointer-events: none;
+            z-index: 50;
+        }
+
+        @keyframes popOut {
+            0% { transform: translate(-50%, -50%) scale(0.5); opacity: 0; }
+            50% { transform: translate(-50%, -50%) scale(1.5); opacity: 1; }
+            100% { transform: translate(-50%, -50%) scale(2); opacity: 0; }
+        }
+
+        .controls {
+            margin-top: 2rem;
+            text-align: center;
+        }
+
+        .back-link {
+            color: #94a3b8;
+            text-decoration: none;
+            font-weight: 600;
+            margin-top: 1rem;
+            display: inline-block;
+        }
+
+        .back-link:hover { color: white; }
+
+        /* Leaderboard modal */
+        #leaderboard-overlay {
+            display: none;
+        }
+
+        /* Stark HUD Elements */
+        .stark-hud-overlay {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            z-index: 5;
+            border: 2px solid rgba(255, 115, 0, 0.2);
+            box-shadow: inset 0 0 100px rgba(255, 115, 0, 0.1);
+        }
+
+        .stark-corner {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            border: 4px solid var(--game-orange);
+        }
+
+        .corner-tl { top: 10px; left: 10px; border-right: 0; border-bottom: 0; }
+        .corner-tr { top: 10px; right: 10px; border-left: 0; border-bottom: 0; }
+        .corner-bl { bottom: 10px; left: 10px; border-right: 0; border-top: 0; }
+        .corner-br { bottom: 10px; right: 10px; border-left: 0; border-top: 0; }
+
+        .scanning-line {
+            position: absolute;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(to right, transparent, var(--game-orange), transparent);
+            top: 0;
+            left: 0;
+            opacity: 0.5;
+            box-shadow: 0 0 15px var(--game-orange);
+            animation: scan 3s linear infinite;
+        }
+
+        @keyframes scan {
+            0% { top: 0; }
+            100% { top: 100%; }
+        }
+
+        .data-stream {
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-family: monospace;
+            font-size: 0.6rem;
+            color: var(--game-orange);
+            opacity: 0.4;
+            writing-mode: vertical-rl;
+            letter-spacing: 2px;
+            animation: glitch 1s infinite;
+        }
+
+        @keyframes glitch {
+            0% { opacity: 0.4; }
+            50% { opacity: 0.1; }
+            100% { opacity: 0.4; }
+        }
+
+        .floating-panel {
+            position: absolute;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 115, 0, 0.3);
+            padding: 0.5rem;
+            font-size: 0.7rem;
+            color: #fff;
+            border-radius: 4px;
+            backdrop-filter: blur(5px);
+        }
+
+        .panel-1 { top: 60px; left: -100px; transform: rotate(-5deg); width: 80px; }
+        .panel-2 { bottom: 60px; right: -100px; transform: rotate(5deg); width: 100px; }
+
+        @media (max-width: 900px) {
+            .panel-1, .panel-2 { display: none; }
+        }
+
+        .tech-circle {
+            position: absolute;
+            width: 150px;
+            height: 150px;
+            border: 1px dashed var(--game-orange);
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            opacity: 0.2;
+            animation: rotate 10s linear infinite;
+        }
+
+        @keyframes rotate {
+            from { transform: translate(-50%, -50%) rotate(0deg); }
+            to { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="game-container">
+        
+        <!-- HUD -->
+        <div class="hud">
+            <div class="stat-box" style="border-left: 5px solid var(--game-orange);">
+                <div class="stat-label">TIME_REMAINING</div>
+                <div id="timer" class="stat-value">20</div>
+            </div>
+            
+            <div class="stat-box" style="border-right: 5px solid var(--game-orange);">
+                <div class="stat-label">SPEED_VELOCITY</div>
+                <div id="score" class="stat-value">0</div>
+            </div>
+        </div>
+
+        <!-- Animation Node -->
+        <div id="pop-score" class="rep-count-anim"></div>
+
+        <!-- Video & Canvas -->
+        <div id="video-container">
+            <!-- Stark HUD Decoration -->
+            <div class="stark-hud-overlay">
+                <div class="stark-corner corner-tl"></div>
+                <div class="stark-corner corner-tr"></div>
+                <div class="stark-corner corner-bl"></div>
+                <div class="stark-corner corner-br"></div>
+                <div class="scanning-line"></div>
+                <div class="data-stream">SYSTEM_SCANNING_POSE_DATA_0101010</div>
+                <div class="tech-circle"></div>
+                <div class="floating-panel panel-1">AI_CORE: ACTIVE<br>SENSORS: OK</div>
+                <div class="floating-panel panel-2">REF_RATE: 60FPS<br>ID: STUDENT_PARTY</div>
+            </div>
+
+            <video id="input_video"></video>
+            <canvas id="output_canvas"></canvas>
+            
+            <!-- Menu Overlay -->
+            <div id="menu-overlay" class="game-overlay">
+                <h1 style="font-size: 3rem; margin-bottom: 0.5rem; color: #fff;">SPEED KING <span style="color: var(--game-orange);">AI</span></h1>
+                <p style="color: #cbd5e1; margin-bottom: 2rem; max-width: 400px;">สะบัดแขนขึ้นลงสลับกันให้ไวที่สุด! <br>กล้องจะตรวจจับความเร็วของคุณโดยอัตโนมัติ</p>
+                <div id="setup-status">
+                    <button id="start-btn" class="btn-start">เริ่มท้าทาย!</button>
+                    <div id="loading-msg" class="loading-text" style="display: none;">กำลังโหลด AI...</div>
+                </div>
+                <a href="index.html" class="back-link">← กลับหน้าหลัก</a>
+            </div>
+
+            <!-- Result Overlay -->
+            <div id="result-overlay" class="game-overlay" style="display: none;">
+                <h2 style="font-size: 2rem;">จบเกม!</h2>
+                <div style="font-size: 5rem; font-weight: 800; color: var(--game-orange);" id="final-score">0</div>
+                <p style="margin-bottom: 1.5rem;">คะแนนของคุณยอดเยี่ยมมาก!</p>
+                
+                <div id="save-form" style="width: 100%; max-width: 300px;">
+                    <input type="text" id="player-name" placeholder="ใส่ชื่อเล่นของคุณ..." style="width: 100%; padding: 0.8rem; border-radius: 0.5rem; border: none; margin-bottom: 1rem; text-align: center; font-family: 'Prompt';">
+                    <button id="save-btn" class="btn-start" style="padding: 0.8rem 2rem; font-size: 1.1rem; width: 100%;">บันทึกสถิติ</button>
+                </div>
+                
+                <button onclick="location.reload()" class="back-link" style="background:none; border:none; cursor:pointer; font-size: 1.1rem; margin-top: 2rem;">เล่นอีกครั้ง</button>
+            </div>
+        </div>
+
+        <div class="controls">
+            <p style="color: #64748b; font-size: 0.9rem;">💡 ยืนห่างจากกล้องให้เห็นช่วงตัว และสะบัดแขนขึ้นลงสลับกัน</p>
+        </div>
+    </div>
+
+    <!-- Firebase Integration -->
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js';
+        import { getDatabase, ref, push, set, onValue, query, orderByChild, limitToLast } from 'https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js';
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCzJxqnulMiNH_yyjJhuNwhOKTf49zqmL4",
+            authDomain: "students-party.firebaseapp.com",
+            databaseURL: "https://students-party-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "students-party",
+            storageBucket: "students-party.firebasestorage.app",
+            messagingSenderId: "382151217353",
+            appId: "1:382151217353:web:6e8ec1ad891fc9763c7d18",
+            measurementId: "G-PF2SHZX7FB"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+
+        // --- Game Logic ---
+        const videoElement = document.getElementById('input_video');
+        const canvasElement = document.getElementById('output_canvas');
+        const canvasCtx = canvasElement.getContext('2d');
+        const startBtn = document.getElementById('start-btn');
+        const loadingMsg = document.getElementById('loading-msg');
+        const timerEl = document.getElementById('timer');
+        const scoreEl = document.getElementById('score');
+        const popScore = document.getElementById('pop-score');
+
+        let score = 0;
+        let timeLeft = 20;
+        let gameActive = false;
+        let lastPositionLeft = 'middle'; // 'up', 'down', 'middle'
+        let lastPositionRight = 'middle';
+
+        // Pose detection setup
+        const pose = new Pose({
+            locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/pose/${file}`,
+        });
+
+        pose.setOptions({
+            modelComplexity: 1,
+            smoothLandmarks: true,
+            minDetectionConfidence: 0.5,
+            minTrackingConfidence: 0.5
+        });
+
+        function onResults(results) {
+            canvasCtx.save();
+            canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
+            canvasCtx.drawImage(results.image, 0, 0, canvasElement.width, canvasElement.height);
+
+            if (results.poseLandmarks) {
+                // Drawing pose skeleton
+                drawConnectors(canvasCtx, results.poseLandmarks, POSE_CONNECTIONS, {color: 'rgba(255,255,255,0.5)', lineWidth: 2});
+                drawLandmarks(canvasCtx, results.poseLandmarks, {color: '#ff7300', lineWidth: 1, radius: 3});
+
+                if (gameActive) {
+                    drawZones(results.poseLandmarks);
+                    processMovement(results.poseLandmarks);
+                }
+            }
+            canvasCtx.restore();
+        }
+
+        function drawZones(landmarks) {
+            const leftSh = landmarks[11];
+            const rightSh = landmarks[12];
+            const shWidth = Math.abs(leftSh.x - rightSh.x);
+            
+            const upLine = leftSh.y - (shWidth * 0.4);
+            const downLine = leftSh.y + (shWidth * 0.4);
+
+            // Draw Up Zone Line
+            canvasCtx.beginPath();
+            canvasCtx.moveTo(0, upLine * canvasElement.height);
+            canvasCtx.lineTo(canvasElement.width, upLine * canvasElement.height);
+            canvasCtx.strokeStyle = 'rgba(0, 255, 0, 0.3)';
+            canvasCtx.setLineDash([5, 5]);
+            canvasCtx.stroke();
+
+            // Draw Down Zone Line
+            canvasCtx.beginPath();
+            canvasCtx.moveTo(0, downLine * canvasElement.height);
+            canvasCtx.lineTo(canvasElement.width, downLine * canvasElement.height);
+            canvasCtx.strokeStyle = 'rgba(255, 0, 0, 0.3)';
+            canvasCtx.stroke();
+            canvasCtx.setLineDash([]);
+        }
+
+        pose.onResults(onResults);
+
+        function processMovement(landmarks) {
+            const leftWrist = landmarks[15];
+            const rightWrist = landmarks[16];
+            const leftSh = landmarks[11];
+            const rightSh = landmarks[12];
+            const shWidth = Math.abs(leftSh.x - rightSh.x);
+
+            const upThreshold = leftSh.y - (shWidth * 0.4);
+            const downThreshold = leftSh.y + (shWidth * 0.4);
+
+            // Left Arm Logic
+            if (leftWrist.y < upThreshold) {
+                if (lastPositionLeft === 'down') {
+                    countRep('left');
+                }
+                lastPositionLeft = 'up';
+            } else if (leftWrist.y > downThreshold) {
+                lastPositionLeft = 'down';
+            }
+
+            // Right Arm Logic
+            if (rightWrist.y < upThreshold) {
+                if (lastPositionRight === 'down') {
+                    countRep('right');
+                }
+                lastPositionRight = 'up';
+            } else if (rightWrist.y > downThreshold) {
+                lastPositionRight = 'down';
+            }
+        }
+
+        function countRep(side) {
+            score++;
+            scoreEl.textContent = score;
+            
+            // Visual feedback
+            popScore.textContent = score;
+            popScore.style.color = (side === 'left') ? '#00ffcc' : '#ffcc00';
+            popScore.style.animation = 'none';
+            void popScore.offsetWidth;
+            popScore.style.animation = 'popOut 0.4s ease-out forwards';
+        }
+
+        async function startGame() {
+            startBtn.style.display = 'none';
+            loadingMsg.style.display = 'block';
+
+            const camera = new Camera(videoElement, {
+                onFrame: async () => {
+                    await pose.send({image: videoElement});
+                },
+                width: 1280,
+                height: 720
+            });
+
+            await camera.start();
+            
+            document.getElementById('menu-overlay').style.display = 'none';
+            loadingMsg.style.display = 'none';
+            gameActive = true;
+            score = 0;
+            timeLeft = 20;
+
+            const interval = setInterval(() => {
+                timeLeft--;
+                timerEl.textContent = timeLeft;
+                if (timeLeft <= 0) {
+                    clearInterval(interval);
+                    endGame();
+                }
+            }, 1000);
+        }
+
+        function endGame() {
+            gameActive = false;
+            document.getElementById('result-overlay').style.display = 'flex';
+            document.getElementById('final-score').textContent = score;
+        }
+
+        // Save Score
+        document.getElementById('save-btn').onclick = async () => {
+            const name = document.getElementById('player-name').value || 'Anonymous';
+            const scoreRef = ref(db, 'game_scores');
+            await push(scoreRef, {
+                name: name,
+                score: score,
+                timestamp: Date.now()
+            });
+            alert('บันทึกสถิติเรียบร้อย!');
+            location.reload();
+        };
+
+        startBtn.onclick = startGame;
+
+    </script>
+</body>
+</html>

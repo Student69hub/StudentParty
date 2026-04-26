@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Policy Impact Dashboard | พรรคนักเรียน</title>
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;600;700&family=Prompt:wght@400;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    
+    <style>
+        :root {
+            --color-done: #22c55e;
+            --color-doing: #f59e0b;
+            --color-plan: #3b82f6;
+        }
+
+        body {
+            background: #f8fafc;
+            color: #1e293b;
+            font-family: 'Prompt', sans-serif;
+        }
+
+        .dashboard-container {
+            padding: 2rem 1.5rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header-section {
+            margin-bottom: 3rem;
+            text-align: center;
+        }
+
+        .grid-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .impact-card {
+            background: #fff;
+            padding: 1.5rem;
+            border-radius: 1.2rem;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            border: 1px solid #f1f5f9;
+        }
+
+        .progress-list {
+            display: grid;
+            gap: 1.5rem;
+        }
+
+        .policy-progress-item {
+            background: #fff;
+            padding: 1.5rem;
+            border-radius: 1rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+        }
+
+        .progress-bar-container {
+            height: 12px;
+            background: #f1f5f9;
+            border-radius: 999px;
+            overflow: hidden;
+            margin-top: 0.8rem;
+        }
+
+        .progress-fill {
+            height: 100%;
+            transition: width 1s ease-in-out;
+        }
+
+        .status-badge {
+            font-size: 0.75rem;
+            padding: 0.25rem 0.75rem;
+            border-radius: 999px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .badge-done { background: #dcfce7; color: #166534; }
+        .badge-doing { background: #fef3c7; color: #92400e; }
+        .badge-plan { background: #dbeafe; color: #1e40af; }
+
+        .chart-container {
+            position: relative;
+            height: 300px;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .grid-stats { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="nav">
+        <div class="nav-inner">
+            <a href="index.html" class="nav-logo">
+                <img src="assets/favicon.png" alt="Logo" class="nav-logo-img">
+                <span class="nav-logo-text">Policy Impact</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="index.html">หน้าแรก</a></li>
+                <li><a href="policy.html">นโยบาย</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="dashboard-container">
+        <header class="header-section">
+            <h1 style="font-size: 2.5rem; font-weight: 900; color: #0f172a;">สรุปความคืบหน้านโยบาย</h1>
+            <p style="color: #64748b;">ข้อมูลอัปเดตแบบ Real-time เพื่อความโปร่งใสของพรรคนักเรียน</p>
+        </header>
+
+        <!-- Stats Overview -->
+        <div class="grid-stats">
+            <div class="impact-card text-center">
+                <div style="font-size: 0.9rem; color: #64748b; font-weight: 600;">นโยบายทั้งหมด</div>
+                <div id="stat-total" style="font-size: 3rem; font-weight: 900; color: var(--color-primary);">0</div>
+            </div>
+            <div class="impact-card">
+                <div style="font-size: 0.9rem; color: #64748b; font-weight: 600; margin-bottom: 1rem;">ความพึงพอใจโดยรวม</div>
+                <div class="chart-container">
+                    <canvas id="pollChart"></canvas>
+                </div>
+            </div>
+            <div class="impact-card text-center">
+                <div style="font-size: 0.9rem; color: #64748b; font-weight: 600;">คะแนนความสำเร็จ</div>
+                <div id="stat-success" style="font-size: 3rem; font-weight: 900; color: var(--color-done);">0%</div>
+            </div>
+        </div>
+
+        <!-- Progress Section -->
+        <div class="section-header">
+            <h2 style="font-size: 1.5rem; font-weight: 800;">🚀 สถานะการดำเนินงาน</h2>
+        </div>
+
+        <div id="progress-list" class="progress-list">
+            <!-- Items injected by Firebase -->
+            <div style="text-align: center; padding: 3rem; color: #94a3b8;">กำลังดึงข้อมูลความคืบหน้า...</div>
+        </div>
+
+    </main>
+
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js';
+        import { getDatabase, ref, onValue } from 'https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js';
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCzJxqnulMiNH_yyjJhuNwhOKTf49zqmL4",
+            authDomain: "students-party.firebaseapp.com",
+            databaseURL: "https://students-party-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "students-party",
+            storageBucket: "students-party.firebasestorage.app",
+            messagingSenderId: "382151217353",
+            appId: "1:382151217353:web:6e8ec1ad891fc9763c7d18",
+            measurementId: "G-PF2SHZX7FB"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+
+        // --- Chart Setup ---
+        const ctx = document.getElementById('pollChart').getContext('2d');
+        let pollChart = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: ['พึงพอใจ', 'ไม่พึงพอใจ'],
+                datasets: [{
+                    data: [1, 1], // Default placeholder data
+                    backgroundColor: ['#e2e8f0', '#f1f5f9'], // Light gray for empty state
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                cutout: '70%',
+                plugins: {
+                    legend: { display: false },
+                    tooltip: { enabled: false }
+                },
+                maintainAspectRatio: false
+            }
+        });
+
+        // --- Fetch Poll Data ---
+        const pollsRef = ref(db, 'active_polls');
+        onValue(pollsRef, (snapshot) => {
+            const data = snapshot.val();
+            
+            // Calculate aggregate satisfaction from all polls
+            let totalSatisfied = 0;
+            let totalUnsatisfied = 0;
+
+            if (data) {
+                Object.values(data).forEach(poll => {
+                    if (poll.options) {
+                        totalSatisfied += (poll.options.opt1?.votes || 0);
+                        totalUnsatisfied += (poll.options.opt2?.votes || 0);
+                    }
+                });
+            }
+
+            if (totalSatisfied === 0 && totalUnsatisfied === 0) {
+                // Keep placeholder gray
+                pollChart.data.datasets[0].data = [1, 1];
+                pollChart.data.datasets[0].backgroundColor = ['#e2e8f0', '#f1f5f9'];
+                pollChart.options.plugins.tooltip.enabled = false;
+            } else {
+                pollChart.data.datasets[0].data = [totalSatisfied, totalUnsatisfied];
+                pollChart.data.datasets[0].backgroundColor = ['#22c55e', '#ef4444'];
+                pollChart.options.plugins.tooltip.enabled = true;
+            }
+            pollChart.update();
+        });
+
+        // --- Fetch Policy Progress ---
+        const policiesRef = ref(db, 'policies');
+        onValue(policiesRef, (snapshot) => {
+            const data = snapshot.val();
+            const listContainer = document.getElementById('progress-list');
+            
+            if (!data) {
+                listContainer.innerHTML = '<div style="text-align: center; padding: 3rem; color: #94a3b8;">ยังไม่มีข้อมูลนโยบาย</div>';
+                return;
+            }
+
+            const policies = Object.entries(data).map(([id, val]) => ({ id, ...val }));
+            document.getElementById('stat-total').textContent = policies.length;
+
+            let doneCount = 0;
+            listContainer.innerHTML = '';
+
+            policies.forEach(p => {
+                // Determine status and progress (defaulting if not in DB)
+                let status = p.status || 'plan'; // done, doing, plan
+                let progress = p.progress || 0;
+                
+                if (status === 'done') { progress = 100; doneCount++; }
+                else if (status === 'doing' && progress === 0) progress = 50;
+                else if (status === 'plan' && progress === 0) progress = 10;
+
+                const card = document.createElement('div');
+                card.className = 'policy-progress-item';
+                
+                const statusLabels = {
+                    done: { text: 'ทำสำเร็จแล้ว', class: 'badge-done', color: 'var(--color-done)' },
+                    doing: { text: 'กำลังดำเนินการ', class: 'badge-doing', color: 'var(--color-doing)' },
+                    plan: { text: 'อยู่ในแผนงาน', class: 'badge-plan', color: 'var(--color-plan)' }
+                };
+
+                const currentStatus = statusLabels[status];
+
+                card.innerHTML = `
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.5rem;">
+                        <h3 style="font-size: 1.1rem; font-weight: 700; margin: 0; color: #0f172a;">${p.title}</h3>
+                        <span class="status-badge ${currentStatus.class}">${currentStatus.text}</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; font-size: 0.85rem; color: #64748b; font-weight: 600;">
+                        <span>ความคืบหน้า</span>
+                        <span>${progress}%</span>
+                    </div>
+                    <div class="progress-bar-container">
+                        <div class="progress-fill" style="width: ${progress}%; background: ${currentStatus.color};"></div>
+                    </div>
+                `;
+                listContainer.appendChild(card);
+            });
+
+            // Update Success Rate
+            const successRate = policies.length > 0 ? Math.round((doneCount / policies.length) * 100) : 0;
+            document.getElementById('stat-success').textContent = successRate + '%';
+        });
+
+    </script>
+</body>
+</html>

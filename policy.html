@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+  <link rel="icon" href="assets/favicon.png" type="image/png">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>นโยบายพรรคนักเรียน | พรรคนักเรียน</title>
+  <meta name="description"
+    content="นโยบายพรรคนักเรียน — จัดการแข่งขัน E-sports, ห้องน้ำสะอาด, รับฟังความเห็นนักเรียน และกิจกรรมสร้างสรรค์เพื่อทุกคน">
+
+  <!-- SEO & Open Graph Tags -->
+  <link rel="canonical" href="https://student-council-c8fdf.web.app/policy.html" />
+  <meta property="og:title" content="นโยบายพรรคนักเรียน | พรรคนักเรียน" />
+  <meta property="og:description"
+    content="นโยบายพรรคนักเรียน — จัดการแข่งขัน E-sports, ห้องน้ำสะอาด, รับฟังความเห็นนักเรียน และกิจกรรมสร้างสรรค์เพื่อทุกคน" />
+  <meta property="og:image" content="https://student-council-c8fdf.web.app/assets/meta-image.png" />
+  <meta property="og:url" content="https://student-council-c8fdf.web.app/policy.html" />
+  <meta property="og:type" content="website" />
+
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="นโยบายพรรคนักเรียน | พรรคนักเรียน" />
+  <meta name="twitter:description"
+    content="นโยบายพรรคนักเรียน — จัดการแข่งขัน E-sports, ห้องน้ำสะอาด, รับฟังความเห็นนักเรียน และกิจกรรมสร้างสรรค์เพื่อทุกคน" />
+  <meta name="twitter:image" content="https://student-council-c8fdf.web.app/assets/meta-image.png" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;600;700;800&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="chatbot.css">
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+</head>
+
+<body>
+  <div id="particles-js-global"
+    style="position: fixed; width: 100vw; height: 100vh; top: 0; left: 0; z-index: -2; pointer-events: none;"></div>
+
+  <nav class="nav">
+    <div class="nav-inner">
+      <a href="logo-meaning.html" class="nav-logo">
+        <img src="assets/favicon.png" alt="โลโก้พรรคนักเรียน" class="nav-logo-img">
+        <span class="nav-logo-text">พรรคนักเรียน</span>
+      </a>
+      <div style="display:flex;align-items:center;gap:.5rem;">
+        <button type="button" class="nav-toggle" id="nav-toggle" aria-label="เปิดเมนู">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+      <ul class="nav-links" id="nav-links">
+        <li><a href="index.html">หน้าแรก</a></li>
+        <li class="nav-item-dropdown">
+          <a href="#" class="nav-dropdown-toggle active">ข้อมูลนโยบาย ▾</a>
+          <ul class="nav-dropdown-menu">
+            <li><a href="policy.html" class="active">นโยบายทั้งหมด</a></li>
+            <li><a href="impact-dashboard.html" style="color: #22c55e; font-weight: 800;">📊 แดชบอร์ดความคืบหน้า</a></li>
+          </ul>
+        </li>
+        <li class="nav-item-dropdown">
+          <a href="#" class="nav-dropdown-toggle">กิจกรรม ▾</a>
+          <ul class="nav-dropdown-menu">
+            <li><a href="esports.html">E-Sports</a></li>
+            <li><a href="achievements.html">ผลงาน</a></li>
+            <li><a href="speed-game.html" style="color: var(--color-primary); font-weight: 800;">🔥 Speed Challenge AI</a></li>
+            <li><a href="gesture-workshop.html" style="color: #00f2ff; font-weight: 800;">🛠️ AI Gesture Workshop</a></li>
+          </ul>
+        </li>
+
+
+        <li class="nav-item-dropdown">
+          <a href="#" class="nav-dropdown-toggle">ความคิดเห็น ▾</a>
+          <ul class="nav-dropdown-menu">
+            <li><a href="feedback.html">ส่งความเห็น</a></li>
+            <li><a href="idea-board.html">กระดานไอเดีย</a></li>
+            <li><a href="feedback-replies.html">การตอบกลับจากแอดมิน</a></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <main id="main-content" class="page-enter">
+    <!-- ===== Global Announcement (Premium Notice) ===== -->
+    <div id="global-announcement-container" class="container" style="margin-top: 2rem;">
+        <div id="announcement-root"></div>
+    </div>
+
+    <section class="policy-hero">
+      <div class="container">
+        <h1 class="policy-hero-title">นโยบายพรรคนักเรียน</h1>
+        <p style="color: rgba(255,255,255,0.85); margin-top: 1rem; font-size: 1.05rem;">
+          เรานำเสนอนโยบายที่ตอบโจทย์ชีวิตในโรงเรียน เพื่อ ทำเพื่อนักเรียน เสียงของนักเรียน
+          และกิจกรรมที่ทุกคนมีส่วนร่วม</p>
+      </div>
+    </section>
+
+    <section class="policy-cards-section" id="policy-cards">
+      <div class="container">
+        <h2 class="section-title">นโยบายที่เราเสนอ</h2>
+        <div class="policy-cards-grid" id="dynamic-policies-grid">
+          <div style="grid-column: 1 / -1; text-align: center; color: #94a3b8; padding: 2rem;">
+             ⏳ กำลังโหลดนโยบาย...
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        <div class="footer-grid">
+          <div class="footer-brand">พรรคนักเรียน</div>
+          <div class="footer-social">
+            <a href="https://www.instagram.com/students.party_?igsh=NjV6NWlrMzR4dXJu" target="_blank"
+              rel="noopener noreferrer" class="instagram" title="Instagram">@students.party_</a>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          © พรรคนักเรียน — สร้างสรรค์เพื่อนักเรียน โดยนักเรียน
+        </div>
+      </div>
+    </footer>
+  </main>
+
+  <script src="script.js"></script>
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+  <script type="module" src="chatbot.js"></script>
+  <script src="interactions.js"></script>
+
+  <!-- Firebase Policies -->
+  <script type="module">
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js';
+    import { getDatabase, ref, get } from 'https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js';
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyCzJxqnulMiNH_yyjJhuNwhOKTf49zqmL4",
+      authDomain: "students-party.firebaseapp.com",
+      databaseURL: "https://students-party-default-rtdb.asia-southeast1.firebasedatabase.app",
+      projectId: "students-party",
+      storageBucket: "students-party.firebasestorage.app",
+      messagingSenderId: "382151217353",
+      appId: "1:382151217353:web:6e8ec1ad891fc9763c7d18",
+      measurementId: "G-PF2SHZX7FB"
+    };
+
+    const app = initializeApp(firebaseConfig, "policy-page");
+    const db = getDatabase(app);
+
+    async function loadPolicies() {
+        // --- Announcement Logic ---
+        const annRef = ref(db, 'global_announcement');
+        onValue(annRef, (snapshot) => {
+            const data = snapshot.val();
+            const container = document.getElementById('global-announcement-container');
+            const root = document.getElementById('announcement-root');
+            
+            if (data && data.active && data.message) {
+                let typeClass = 'ann-card-info';
+                let icon = '📢';
+                let tag = 'ประกาศ';
+
+                if (data.type === 'urgent') {
+                    typeClass = 'ann-card-urgent';
+                    icon = '🚨';
+                    tag = 'ด่วนมาก';
+                } else if (data.type === 'warning') {
+                    typeClass = 'ann-card-warning';
+                    icon = '⚠️';
+                    tag = 'แจ้งเตือน';
+                }
+
+                root.innerHTML = `
+                    <div class="announcement-card ${typeClass}" data-aos="zoom-in">
+                        <div class="ann-icon-box">${icon}</div>
+                        <div class="ann-content">
+                            <span class="ann-tag">${tag}</span>
+                            <div class="ann-text">${data.message}</div>
+                            ${data.link ? `<a href="${data.link}" target="_blank" class="ann-link-btn">อ่านรายละเอียดเพิ่มเติม →</a>` : ''}
+                        </div>
+                    </div>
+                `;
+                container.style.display = 'block';
+                if (typeof AOS !== 'undefined') AOS.refresh();
+            } else {
+                container.style.display = 'none';
+            }
+        });
+
+      const grid = document.getElementById('dynamic-policies-grid');
+      try {
+        const snapshot = await get(ref(db, 'policies'));
+        if (snapshot.exists()) {
+          const data = snapshot.val();
+          const policiesArray = Object.entries(data).map(([id, val]) => ({ id, ...val }));
+          
+          if (policiesArray.length === 0) {
+              grid.innerHTML = '<div style="grid-column: 1 / -1; text-align: center; color: #94a3b8; padding: 2rem;">ยังไม่มีนโยบายในขณะนี้</div>';
+              return;
+          }
+
+          grid.innerHTML = '';
+          policiesArray.sort((a, b) => (a.createdAt || 0) - (b.createdAt || 0)).forEach(p => {
+            const article = document.createElement('article');
+            article.className = 'policy-card policy-card--glass';
+            article.style.cursor = 'pointer';
+            article.onclick = () => { window.location.href = `policy-detail.html?id=${p.id}`; };
+            
+            const imageHtml = p.imageUrl 
+                ? `<div class="policy-card-image"><img src="${p.imageUrl}" alt="${p.title}" loading="lazy" style="width: 100%; height: 100%; object-fit: cover;"></div>`
+                : `<div class="policy-card-image" style="background: rgba(0,0,0,0.5); display:flex; align-items:center; justify-content:center; color:#64748b;">ไม่มีรูปภาพ</div>`;
+
+            article.innerHTML = `
+              ${imageHtml}
+              <div class="policy-card-content">
+                <span class="policy-card-tag" style="margin-bottom:0.5rem; display:inline-block; font-size:0.8rem;">${p.category || '[นโยบาย]'}</span>
+                <h3 class="policy-card-title">${p.title}</h3>
+                <p class="policy-card-desc">${p.description}</p>
+              </div>
+            `;
+            grid.appendChild(article);
+          });
+        } else {
+            grid.innerHTML = '<div style="grid-column: 1 / -1; text-align: center; color: #94a3b8; padding: 2rem;">ยังไม่มีนโยบายในขณะนี้</div>';
+        }
+      } catch (e) {
+        console.error("Failed to load policies", e);
+        grid.innerHTML = '<div style="grid-column: 1 / -1; text-align: center; color: #fca5a5; padding: 2rem;">เกิดข้อผิดพลาดในการโหลดข้อมูล</div>';
+      }
+    }
+
+    loadPolicies();
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ลงทะเบียน eFootball | พรรคนักเรียน</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <nav class="nav">
+        <div class="nav-inner">
+            <a href="index.html" class="nav-logo">
+                <img src="assets/favicon.png" alt="โลโก้พรรคนักเรียน" class="nav-logo-img">
+                <span class="nav-logo-text">พรรคนักเรียน</span>
+            </a>
+            <div style="display:flex;align-items:center;gap:.5rem;">
+                <button type="button" class="nav-toggle" id="nav-toggle" aria-label="เปิดเมนู">
+                    <span></span><span></span><span></span>
+                </button>
+            </div>
+            <ul class="nav-links" id="nav-links">
+                <li><a href="index.html">หน้าแรก</a></li>
+                <li><a href="policy.html">นโยบาย</a></li>
+                <li class="nav-item-dropdown">
+                    <a href="#" class="nav-dropdown-toggle">กิจกรรม ▾</a>
+                    <ul class="nav-dropdown-menu">
+                        <li><a href="esports.html">E-Sports</a></li>
+                        <li><a href="achievements.html">ผลงาน</a></li>
+                    </ul>
+                </li>
+
+
+                <li class="nav-item-dropdown">
+                    <a href="#" class="nav-dropdown-toggle">ความคิดเห็น ▾</a>
+                    <ul class="nav-dropdown-menu">
+                        <li><a href="feedback.html">ส่งความเห็น</a></li>
+                        <li><a href="feedback-replies.html">การตอบกลับจากแอดมิน</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <main id="main-content" class="page-enter">
+        <!-- ===== Global Announcement (Premium Notice) ===== -->
+        <div id="global-announcement-container" class="container" style="margin-top: 2rem;">
+            <div id="announcement-root"></div>
+        </div>
+
+        <div class="registration-container" data-aos="zoom-in">
+            <div class="container">
+                <h1>สมัครแข่งขัน eFootball</h1>
+                <p style="margin-top: 0.5rem; opacity: 0.9;">ลงทะเบียนเข้าร่วม eFootball League ปีการศึกษา 2569</p>
+            </div>
+        </section>
+
+        <style>
+            .premium-form-container {
+                max-width: 520px;
+                margin: 0 auto;
+                position: relative;
+                z-index: 10;
+            }
+
+            /* Glow effect behind the form */
+            .premium-form-container::before {
+                content: '';
+                position: absolute;
+                top: -10%;
+                left: -10%;
+                width: 120%;
+                height: 120%;
+                background: radial-gradient(circle at 50% 50%, rgba(255, 115, 0, 0.15) 0%, transparent 70%);
+                z-index: -1;
+                pointer-events: none;
+            }
+
+            .premium-form {
+                background: rgba(255, 255, 255, 0.95);
+                /* Bright white */
+                border: 1px solid #ffffff;
+                border-top: 2px solid #ffffff;
+                border-radius: 1.5rem;
+                padding: 3rem;
+                backdrop-filter: blur(20px);
+                -webkit-backdrop-filter: blur(20px);
+                box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(255, 255, 255, 0.8) inset;
+                transition: transform 0.3s ease, box-shadow 0.3s ease;
+            }
+
+            .premium-form:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 30px 60px -15px rgba(255, 115, 0, 0.15), 0 0 0 1px rgba(255, 255, 255, 0.08) inset;
+            }
+
+            .form-group-premium {
+                margin-bottom: 1.5rem;
+                position: relative;
+            }
+
+            .form-group-premium label {
+                display: block;
+                margin-bottom: 0.6rem;
+                font-weight: 800;
+                font-size: 1rem;
+                color: #334155;
+                /* Dark gray/blue */
+                letter-spacing: 0.02em;
+                transition: color 0.3s ease;
+            }
+
+            .form-control-premium {
+                width: 100%;
+                padding: 1.1rem 1.25rem;
+                border-radius: 0.75rem;
+                background: #f8fafc;
+                border: 2px solid #e2e8f0;
+                color: #1e293b;
+                font-size: 1.05rem;
+                font-family: inherit;
+                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                outline: none;
+                font-weight: 500;
+            }
+
+            .form-control-premium::placeholder {
+                color: #94a3b8;
+            }
+
+            .form-control-premium:focus {
+                background: #ffffff;
+                border-color: #ff7300;
+                box-shadow: 0 0 0 4px rgba(255, 115, 0, 0.15);
+            }
+
+            .form-group-premium:focus-within label {
+                color: #ff7300;
+            }
+
+            select.form-control-premium {
+                appearance: none;
+                cursor: pointer;
+            }
+
+            .select-icon {
+                position: absolute;
+                right: 1.25rem;
+                top: 3.1rem;
+                pointer-events: none;
+                color: #94a3b8;
+                transition: transform 0.3s ease;
+            }
+
+            .form-control-premium:focus+.select-icon {
+                transform: rotate(180deg);
+                color: #ff7300;
+            }
+
+            /* Styling the options inside select specifically for some browsers */
+            select.form-control-premium option {
+                background-color: #ffffff;
+                color: #1e293b;
+                padding: 15px;
+            }
+
+            .btn-premium-submit {
+                width: 100%;
+                padding: 1.1rem;
+                margin-top: 1rem;
+                border-radius: 0.75rem;
+                font-size: 1.15rem;
+                font-weight: 800;
+                text-transform: uppercase;
+                letter-spacing: 0.05em;
+                background: linear-gradient(135deg, #ff7300 0%, #fca311 100%);
+                color: #fff;
+                border: none;
+                cursor: pointer;
+                box-shadow: 0 10px 25px -5px rgba(255, 115, 0, 0.4);
+                transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+                position: relative;
+                overflow: hidden;
+            }
+
+            .btn-premium-submit::after {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: -100%;
+                width: 50%;
+                height: 100%;
+                background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+                transform: skewX(-20deg);
+                transition: left 0.7s ease;
+            }
+
+            .btn-premium-submit:hover {
+                transform: translateY(-3px) scale(1.02);
+                box-shadow: 0 15px 35px -5px rgba(255, 115, 0, 0.5);
+            }
+
+            .btn-premium-submit:hover::after {
+                left: 150%;
+            }
+
+            .btn-premium-submit:active {
+                transform: translateY(1px) scale(0.98);
+            }
+        </style>
+
+        <div class="premium-form-container" data-aos="fade-up">
+            <form id="efootball-register-form" class="premium-form">
+                <div class="form-group-premium">
+                    <label for="player-name">ชื่อ-นามสกุล</label>
+                    <input type="text" id="player-name" name="player-name" class="form-control-premium" required
+                        placeholder="กรอกชื่อจริง-นามสกุล">
+                </div>
+                <div class="form-group-premium">
+                    <label for="player-class">ชั้นเรียน</label>
+                    <select id="player-class" name="player-class" class="form-control-premium" required>
+                        <option value="">-- เลือกชั้นเรียน --</option>
+                        <option value="p1/1">ป.1/1</option>
+                        <option value="p1/2">ป.1/2</option>
+                        <option value="p2/1">ป.2/1</option>
+                        <option value="p2/2">ป.2/2</option>
+                        <option value="p3/1">ป.3/1</option>
+                        <option value="p3/2">ป.3/2</option>
+                        <option value="p4/1">ป.4/1</option>
+                        <option value="p4/2">ป.4/2</option>
+                        <option value="p5/1">ป.5/1</option>
+                        <option value="p5/2">ป.5/2</option>
+                        <option value="p5/3">ป.5/3</option>
+                        <option value="p6/1">ป.6/1</option>
+                        <option value="p6/2">ป.6/2</option>
+                        <option value="m1/1">ม.1/1</option>
+                        <option value="m1/2">ม.1/2</option>
+                        <option value="m2/1">ม.2/1</option>
+                        <option value="m2/2">ม.2/2</option>
+                        <option value="m3/1">ม.3/1</option>
+                        <option value="m3/2">ม.3/2</option>
+                    </select>
+                    <div class="select-icon">
+                        <svg width="14" height="10" viewBox="0 0 14 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M1 1.5L7 7.5L13 1.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" />
+                        </svg>
+                    </div>
+                </div>
+                <div class="form-group-premium">
+                    <label for="player-id">eFootball ID (ชื่อในเกม)</label>
+                    <input type="text" id="player-id" name="player-id" class="form-control-premium" required
+                        placeholder="ชื่อผู้เล่นในเกม eFootball">
+                </div>
+                <div class="form-group-premium">
+                    <label for="team-name">ทีมที่จะลงแข่ง (20 ทีมพรีเมียร์ลีก)</label>
+                    <div style="position: relative;">
+                        <select id="team-name" name="team-name" class="form-control-premium" required>
+                            <option value="">-- เลือกทีม --</option>
+                            <option value="Arsenal">Arsenal</option>
+                            <option value="Aston Villa">Aston Villa</option>
+                            <option value="Bournemouth">Bournemouth</option>
+                            <option value="Brentford">Brentford</option>
+                            <option value="Brighton">Brighton</option>
+                            <option value="Burnley">Burnley</option>
+                            <option value="Chelsea">Chelsea</option>
+                            <option value="Crystal Palace">Crystal Palace</option>
+                            <option value="Everton">Everton</option>
+                            <option value="Fulham">Fulham</option>
+                            <option value="Leeds United">Leeds United</option>
+                            <option value="Liverpool">Liverpool</option>
+                            <option value="Manchester City">Manchester City</option>
+                            <option value="Manchester United">Manchester United</option>
+                            <option value="Newcastle United">Newcastle United</option>
+                            <option value="Nottingham Forest">Nottingham Forest</option>
+                            <option value="Sunderland">Sunderland</option>
+                            <option value="Tottenham Hotspur">Tottenham Hotspur</option>
+                            <option value="West Ham United">West Ham United</option>
+                            <option value="Wolverhampton">Wolverhampton</option>
+                        </select>
+                        <div class="select-icon">
+                            <svg width="14" height="10" viewBox="0 0 14 10" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path d="M1 1.5L7 7.5L13 1.5" stroke="currentColor" stroke-width="2"
+                                    stroke-linecap="round" stroke-linejoin="round" />
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+                <button type="submit" class="btn-premium-submit">
+                    สมัครแข่งขัน
+                </button>
+                <p id="register-msg"
+                    style="margin-top:1.5rem;text-align:center;display:none; font-size: 0.95rem; font-weight: 600;"></p>
+            </form>
+        </div>
+        </div>
+        </section>
+
+        <footer class="footer">
+            <div class="footer-inner">
+                <div class="footer-grid">
+                    <div class="footer-brand">พรรคนักเรียน</div>
+                    <div class="footer-social">
+                        <a href="https://www.instagram.com/students.party_?igsh=NjV6NWlrMzR4dXJu" target="_blank"
+                            rel="noopener noreferrer" class="instagram" title="Instagram">@students.party_</a>
+                        <a href="https://www.facebook.com/share/1Gdh4ZEpRo/" target="_blank" rel="noopener noreferrer"
+                            aria-label="Facebook" title="Facebook">
+                            <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+                <div class="footer-bottom">
+                    © 2569 พรรคนักเรียน — สร้างสรรค์เพื่อนักเรียน โดยนักเรียน
+                </div>
+            </div>
+        </footer>
+    </main>
+
+    <!-- Firebase SDK -->
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js';
+        import { getDatabase, ref, push, runTransaction, onValue } from 'https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js';
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCzJxqnulMiNH_yyjJhuNwhOKTf49zqmL4",
+            authDomain: "students-party.firebaseapp.com",
+            databaseURL: "https://students-party-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "students-party",
+            storageBucket: "students-party.firebasestorage.app",
+            messagingSenderId: "382151217353",
+            appId: "1:382151217353:web:6e8ec1ad891fc9763c7d18",
+            measurementId: "G-PF2SHZX7FB"
+        };
+
+        const app = initializeApp(firebaseConfig, 'efootball-app');
+        const db = getDatabase(app);
+
+        // --- Announcement Logic ---
+        const annRef = ref(db, 'global_announcement');
+        onValue(annRef, (snapshot) => {
+            const data = snapshot.val();
+            const container = document.getElementById('global-announcement-container');
+            const root = document.getElementById('announcement-root');
+            
+            if (data && data.active && data.message) {
+                let typeClass = 'ann-card-info';
+                let icon = '📢';
+                let tag = 'ประกาศ';
+
+                if (data.type === 'urgent') {
+                    typeClass = 'ann-card-urgent';
+                    icon = '🚨';
+                    tag = 'ด่วนมาก';
+                } else if (data.type === 'warning') {
+                    typeClass = 'ann-card-warning';
+                    icon = '⚠️';
+                    tag = 'แจ้งเตือน';
+                }
+
+                root.innerHTML = `
+                    <div class="announcement-card ${typeClass}" data-aos="zoom-in">
+                        <div class="ann-icon-box">${icon}</div>
+                        <div class="ann-content">
+                            <span class="ann-tag">${tag}</span>
+                            <div class="ann-text">${data.message}</div>
+                            ${data.link ? `<a href="${data.link}" target="_blank" class="ann-link-btn">อ่านรายละเอียดเพิ่มเติม →</a>` : ''}
+                        </div>
+                    </div>
+                `;
+                container.style.display = 'block';
+                if (typeof AOS !== 'undefined') AOS.refresh();
+            } else {
+                container.style.display = 'none';
+            }
+        });
+
+        document.getElementById('efootball-register-form').addEventListener('submit', async function (e) {
+            e.preventDefault();
+
+            const btn = this.querySelector('button[type="submit"]');
+            btn.disabled = true;
+            btn.textContent = '⏳ กำลังส่งข้อมูล...';
+
+            const name = document.getElementById('player-name').value.trim();
+            const className = document.getElementById('player-class').value;
+            const gameId = document.getElementById('player-id').value.trim();
+            const teamName = document.getElementById('team-name').value.trim();
+
+            if (!name || !className || !gameId || !teamName) {
+                alert('กรุณากรอกข้อมูลให้ครบถ้วน');
+                btn.disabled = false;
+                btn.textContent = 'สมัครแข่งขัน';
+                return;
+            }
+
+            try {
+                // Get sequential ID atomically
+                const seqIdRef = ref(db, 'stats/efootball_last_id');
+                const transResult = await runTransaction(seqIdRef, (currentData) => {
+                    return (currentData || 0) + 1;
+                });
+                const seqId = transResult.snapshot.val();
+
+                const newPlayer = {
+                    seqId,
+                    name,
+                    className,
+                    gameId,
+                    teamName,
+                    createdAt: Date.now(),
+                    scorePts: 0,
+                    scoreWin: 0,
+                    scoreLoss: 0
+                };
+
+                // Save to Firebase
+                await push(ref(db, 'efootball_players'), newPlayer);
+
+                // Keep local state for navbar UI updates
+                localStorage.setItem('efootball_user_registered', 'true');
+
+                // Fallback for immediate UI
+                const msg = document.getElementById('register-msg');
+                msg.textContent = `✅ สมัครสำเร็จ! ได้คิวการแข่งขันหมายเลข ${seqId}`;
+                msg.style.color = '#86efac';
+                msg.style.display = 'block';
+
+                this.reset();
+
+            } catch (err) {
+                console.error(err);
+                const msg = document.getElementById('register-msg');
+                msg.textContent = '❌ เกิดข้อผิดพลาด กรุณาลองใหม่';
+                msg.style.color = '#fca5a5';
+                msg.style.display = 'block';
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'สมัครแข่งขัน';
+            }
+        });
+    </script>
+    <script src="script.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,316 @@
+﻿<table class="league-table">
+            <thead>
+              <tr>
+                <th class="col-pos">อันดับ</th>
+                <th class="col-club">ผู้เข้าแข่งขัน (ทีม)</th>
+                <th class="col-stat" title="แข่ง (Played)">แข่ง</th>
+                <th class="col-stat" title="ชนะ (Won)">ชนะ</th>
+                <th class="col-stat" title="เสมอ (Drawn)">เสมอ</th>
+                <th class="col-stat" title="แพ้ (Lost)">แพ้</th>
+                <th class="col-stat hide-mobile" title="ประตูได้เสีย (Goal Difference)">ได้/เสีย</th>
+                <th class="col-pts" title="คะแนน (Points)">แต้ม</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="row-champion">
+                <td class="col-pos"><span class="pos-badge pos-1">1</span></td>
+                <td class="col-club">
+                  <div class="club-info">
+                    <div class="club-logo bg-primary" style="width:24px;height:24px;border-radius:50%;background:var(--color-gray-500)"></div>
+                    <span class="club-name">Arsenal</span>
+                  </div>
+                </td>
+                <td class="col-stat">0</td>
+                <td class="col-stat">0</td>
+                <td class="col-stat">0</td>
+                <td class="col-stat">0</td>
+                <td class="col-stat hide-mobile">0</td>
+                <td class="col-pts">0</td>
+              </tr>
+              <tr class="row-runnerup">
+                <td class="col-pos"><span class="pos-badge pos-2">2</span></td>
+                <td class="col-club">
+                  <div class="club-info">
+                    <div class="club-logo bg-primary" style="width:24px;height:24px;border-radius:50%;background:var(--color-gray-500)"></div>
+                    <span class="club-name">Aston Villa</span>
+                  </div>
+                </td>
+                <td class="col-stat">0</td>
+                <td class="col-stat">0</td>
+                <td class="col-stat">0</td>
+                <td class="col-stat">0</td>
+                <td class="col-stat hide-mobile">0</td>
+                <td class="col-pts">0</td>
+              </tr>
+              <tr>
+                <td class="col-pos"><span class="pos-badge">3</span></td>
+                <td class="col-club">
+                  <div class="club-info">
+                    <div class="club-logo bg-primary" style="width:24px;height:24px;border-radius:50%;background:var(--color-gray-500)"></div>
+                    <span class="club-name">Bournemouth</span>
+                  </div>
+                </td>
+                <td class="col-stat">0</td>
+                <td class="col-stat">0</td>
+                <td class="col-stat">0</td>
+                <td class="col-stat">0</td>
+                <td class="col-stat hide-mobile">0</td>
+                <td class="col-pts">0</td>
+              </tr>
+              <tr>
+                <td class="col-pos"><span class="pos-badge">4</span></td>
+                <td class="col-club">
+                  <div class="club-info">
+                    <div class="club-logo bg-primary" style="width:24px;height:24px;border-radius:50%;background:var(--color-gray-500)"></div>
+                    <span class="club-name">Brentford</span>
+                  </div>
+                </td>
+                <td class="col-stat">0</td>
+                <td class="col-stat">0</td>
+                <td class="col-stat">0</td>
+                <td class="col-stat">0</td>
+                <td class="col-stat hide-mobile">0</td>
+                <td class="col-pts">0</td>
+              </tr>
+              <tr>
+                <td class="col-pos"><span class="pos-badge">5</span></td>
+                <td class="col-club">
+                  <div class="club-info">
+                    <div class="club-logo bg-primary" style="width:24px;height:24px;border-radius:50%;background:var(--color-gray-500)"></div>
+                    <span class="club-name">Brighton & Hove Albion</span>
+                  </div>
+                </td>
+                <td class="col-stat">0</td>
+                <td class="col-stat">0</td>
+                <td class="col-stat">0</td>
+                <td class="col-stat">0</td>
+                <td class="col-stat hide-mobile">0</td>
+                <td class="col-pts">0</td>
+              </tr>
+              <tr>
+                <td class="col-pos"><span class="pos-badge">6</span></td>
+                <td class="col-club">
+                  <div class="club-info">
+                    <div class="club-logo bg-primary" style="width:24px;height:24px;border-radius:50%;background:var(--color-gray-500)"></div>
+                    <span class="club-name">Chelsea</span>
+                  </div>
+                </td>
+                <td class="col-stat">0</td>
+                <td class="col-stat">0</td>
+                <td class="col-stat">0</td>
+                <td class="col-stat">0</td>
+                <td class="col-stat hide-mobile">0</td>
+                <td class="col-pts">0</td>
+              </tr>
+              <tr>
+                <td class="col-pos"><span class="pos-badge">7</span></td>
+                <td class="col-club">
+                  <div class="club-info">
+                    <div class="club-logo bg-primary" style="width:24px;height:24px;border-radius:50%;background:var(--color-gray-500)"></div>
+                    <span class="club-name">Crystal Palace</span>
+                  </div>
+                </td>
+                <td class="col-stat">0</td>
+                <td class="col-stat">0</td>
+                <td class="col-stat">0</td>
+                <td class="col-stat">0</td>
+                <td class="col-stat hide-mobile">0</td>
+                <td class="col-pts">0</td>
+              </tr>
+              <tr>
+                <td class="col-pos"><span class="pos-badge">8</span></td>
+                <td class="col-club">
+                  <div class="club-info">
+                    <div class="club-logo bg-primary" style="width:24px;height:24px;border-radius:50%;background:var(--color-gray-500)"></div>
+                    <span class="club-name">Everton</span>
+                  </div>
+                </td>
+                <td class="col-stat">0</td>
+                <td class="col-stat">0</td>
+                <td class="col-stat">0</td>
+                <td class="col-stat">0</td>
+                <td class="col-stat hide-mobile">0</td>
+                <td class="col-pts">0</td>
+              </tr>
+              <tr>
+                <td class="col-pos"><span class="pos-badge">9</span></td>
+                <td class="col-club">
+                  <div class="club-info">
+                    <div class="club-logo bg-primary" style="width:24px;height:24px;border-radius:50%;background:var(--color-gray-500)"></div>
+                    <span class="club-name">Fulham</span>
+                  </div>
+                </td>
+                <td class="col-stat">0</td>
+                <td class="col-stat">0</td>
+                <td class="col-stat">0</td>
+                <td class="col-stat">0</td>
+                <td class="col-stat hide-mobile">0</td>
+                <td class="col-pts">0</td>
+              </tr>
+              <tr>
+                <td class="col-pos"><span class="pos-badge">10</span></td>
+                <td class="col-club">
+                  <div class="club-info">
+                    <div class="club-logo bg-primary" style="width:24px;height:24px;border-radius:50%;background:var(--color-gray-500)"></div>
+                    <span class="club-name">Ipswich Town</span>
+                  </div>
+                </td>
+                <td class="col-stat">0</td>
+                <td class="col-stat">0</td>
+                <td class="col-stat">0</td>
+                <td class="col-stat">0</td>
+                <td class="col-stat hide-mobile">0</td>
+                <td class="col-pts">0</td>
+              </tr>
+              <tr>
+                <td class="col-pos"><span class="pos-badge">11</span></td>
+                <td class="col-club">
+                  <div class="club-info">
+                    <div class="club-logo bg-primary" style="width:24px;height:24px;border-radius:50%;background:var(--color-gray-500)"></div>
+                    <span class="club-name">Leicester City</span>
+                  </div>
+                </td>
+                <td class="col-stat">0</td>
+                <td class="col-stat">0</td>
+                <td class="col-stat">0</td>
+                <td class="col-stat">0</td>
+                <td class="col-stat hide-mobile">0</td>
+                <td class="col-pts">0</td>
+              </tr>
+              <tr>
+                <td class="col-pos"><span class="pos-badge">12</span></td>
+                <td class="col-club">
+                  <div class="club-info">
+                    <div class="club-logo bg-primary" style="width:24px;height:24px;border-radius:50%;background:var(--color-gray-500)"></div>
+                    <span class="club-name">Liverpool</span>
+                  </div>
+                </td>
+                <td class="col-stat">0</td>
+                <td class="col-stat">0</td>
+                <td class="col-stat">0</td>
+                <td class="col-stat">0</td>
+                <td class="col-stat hide-mobile">0</td>
+                <td class="col-pts">0</td>
+              </tr>
+              <tr>
+                <td class="col-pos"><span class="pos-badge">13</span></td>
+                <td class="col-club">
+                  <div class="club-info">
+                    <div class="club-logo bg-primary" style="width:24px;height:24px;border-radius:50%;background:var(--color-gray-500)"></div>
+                    <span class="club-name">Manchester City</span>
+                  </div>
+                </td>
+                <td class="col-stat">0</td>
+                <td class="col-stat">0</td>
+                <td class="col-stat">0</td>
+                <td class="col-stat">0</td>
+                <td class="col-stat hide-mobile">0</td>
+                <td class="col-pts">0</td>
+              </tr>
+              <tr>
+                <td class="col-pos"><span class="pos-badge">14</span></td>
+                <td class="col-club">
+                  <div class="club-info">
+                    <div class="club-logo bg-primary" style="width:24px;height:24px;border-radius:50%;background:var(--color-gray-500)"></div>
+                    <span class="club-name">Manchester United</span>
+                  </div>
+                </td>
+                <td class="col-stat">0</td>
+                <td class="col-stat">0</td>
+                <td class="col-stat">0</td>
+                <td class="col-stat">0</td>
+                <td class="col-stat hide-mobile">0</td>
+                <td class="col-pts">0</td>
+              </tr>
+              <tr>
+                <td class="col-pos"><span class="pos-badge">15</span></td>
+                <td class="col-club">
+                  <div class="club-info">
+                    <div class="club-logo bg-primary" style="width:24px;height:24px;border-radius:50%;background:var(--color-gray-500)"></div>
+                    <span class="club-name">Newcastle United</span>
+                  </div>
+                </td>
+                <td class="col-stat">0</td>
+                <td class="col-stat">0</td>
+                <td class="col-stat">0</td>
+                <td class="col-stat">0</td>
+                <td class="col-stat hide-mobile">0</td>
+                <td class="col-pts">0</td>
+              </tr>
+              <tr>
+                <td class="col-pos"><span class="pos-badge">16</span></td>
+                <td class="col-club">
+                  <div class="club-info">
+                    <div class="club-logo bg-primary" style="width:24px;height:24px;border-radius:50%;background:var(--color-gray-500)"></div>
+                    <span class="club-name">Nottingham Forest</span>
+                  </div>
+                </td>
+                <td class="col-stat">0</td>
+                <td class="col-stat">0</td>
+                <td class="col-stat">0</td>
+                <td class="col-stat">0</td>
+                <td class="col-stat hide-mobile">0</td>
+                <td class="col-pts">0</td>
+              </tr>
+              <tr>
+                <td class="col-pos"><span class="pos-badge">17</span></td>
+                <td class="col-club">
+                  <div class="club-info">
+                    <div class="club-logo bg-primary" style="width:24px;height:24px;border-radius:50%;background:var(--color-gray-500)"></div>
+                    <span class="club-name">Southampton</span>
+                  </div>
+                </td>
+                <td class="col-stat">0</td>
+                <td class="col-stat">0</td>
+                <td class="col-stat">0</td>
+                <td class="col-stat">0</td>
+                <td class="col-stat hide-mobile">0</td>
+                <td class="col-pts">0</td>
+              </tr>
+              <tr>
+                <td class="col-pos"><span class="pos-badge">18</span></td>
+                <td class="col-club">
+                  <div class="club-info">
+                    <div class="club-logo bg-primary" style="width:24px;height:24px;border-radius:50%;background:var(--color-gray-500)"></div>
+                    <span class="club-name">Tottenham Hotspur</span>
+                  </div>
+                </td>
+                <td class="col-stat">0</td>
+                <td class="col-stat">0</td>
+                <td class="col-stat">0</td>
+                <td class="col-stat">0</td>
+                <td class="col-stat hide-mobile">0</td>
+                <td class="col-pts">0</td>
+              </tr>
+              <tr>
+                <td class="col-pos"><span class="pos-badge">19</span></td>
+                <td class="col-club">
+                  <div class="club-info">
+                    <div class="club-logo bg-primary" style="width:24px;height:24px;border-radius:50%;background:var(--color-gray-500)"></div>
+                    <span class="club-name">West Ham United</span>
+                  </div>
+                </td>
+                <td class="col-stat">0</td>
+                <td class="col-stat">0</td>
+                <td class="col-stat">0</td>
+                <td class="col-stat">0</td>
+                <td class="col-stat hide-mobile">0</td>
+                <td class="col-pts">0</td>
+              </tr>
+              <tr>
+                <td class="col-pos"><span class="pos-badge">20</span></td>
+                <td class="col-club">
+                  <div class="club-info">
+                    <div class="club-logo bg-primary" style="width:24px;height:24px;border-radius:50%;background:var(--color-gray-500)"></div>
+                    <span class="club-name">Wolverhampton Wanderers</span>
+                  </div>
+                </td>
+                <td class="col-stat">0</td>
+                <td class="col-stat">0</td>
+                <td class="col-stat">0</td>
+                <td class="col-stat">0</td>
+                <td class="col-stat hide-mobile">0</td>
+                <td class="col-pts">0</td>
+              </tr>
+            </tbody>
+          </table>

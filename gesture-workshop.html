@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Gesture Workshop | พรรคนักเรียน</title>
+    
+    <!-- Three.js & MediaPipe -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js" crossorigin="anonymous"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;600;700&family=Prompt:wght@400;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --accent-color: #ff7300;
+            --secondary-color: #00f2ff;
+            --bg-dark: #0a0a0c;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background: var(--bg-dark);
+            color: white;
+            font-family: 'Prompt', sans-serif;
+            overflow: hidden;
+        }
+
+        #canvas-container {
+            position: absolute;
+            inset: 0;
+            width: 100vw;
+            height: 100vh;
+        }
+
+        #video-preview {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            width: 200px;
+            height: 150px;
+            border-radius: 12px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            overflow: hidden;
+            transform: scaleX(-1);
+            z-index: 100;
+            background: #000;
+        }
+
+        #input_video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .workshop-ui {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            z-index: 10;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .brand {
+            font-size: 1.5rem;
+            font-weight: 800;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .dot { width: 12px; height: 12px; background: var(--accent-color); border-radius: 50%; box-shadow: 0 0 10px var(--accent-color); }
+
+        .mode-selector {
+            display: flex;
+            gap: 10px;
+            pointer-events: auto;
+        }
+
+        .mode-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #94a3b8;
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: 'Prompt';
+            font-weight: 700;
+            transition: all 0.3s;
+        }
+
+        .mode-btn.active {
+            background: var(--accent-color);
+            color: white;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 20px rgba(255, 115, 0, 0.4);
+        }
+
+        .status-box {
+            position: absolute;
+            left: 2rem;
+            top: 7rem;
+            background: rgba(0,0,0,0.4);
+            backdrop-filter: blur(10px);
+            padding: 1rem;
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.05);
+            font-family: monospace;
+            font-size: 0.8rem;
+            color: #94a3b8;
+        }
+
+        .status-box span { color: var(--accent-color); font-weight: bold; }
+
+        .hint-bar {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .hint-text {
+            background: rgba(255,255,255,0.05);
+            padding: 0.8rem 2rem;
+            border-radius: 999px;
+            display: inline-block;
+            border: 1px solid rgba(255,255,255,0.1);
+            font-weight: 600;
+            color: #cbd5e1;
+        }
+
+        #loading-screen {
+            position: fixed;
+            inset: 0;
+            background: var(--bg-dark);
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .spinner {
+            width: 60px;
+            height: 60px;
+            border: 4px solid rgba(255, 255, 255, 0.1);
+            border-top: 4px solid var(--accent-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .back-link {
+            color: white;
+            text-decoration: none;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            pointer-events: auto;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="loading-screen">
+        <div class="spinner"></div>
+        <p style="margin-top: 1.5rem; letter-spacing: 2px;">CALIBRATING GESTURE SYSTEM...</p>
+    </div>
+
+    <div id="canvas-container"></div>
+    
+    <div id="video-preview">
+        <video id="input_video"></video>
+    </div>
+
+    <div class="workshop-ui">
+        <div class="top-bar">
+            <div class="brand">
+                <div class="dot"></div>
+                AI GESTURE WORKSHOP
+            </div>
+            <div class="mode-selector">
+                <button class="mode-btn active" onclick="setMode('build')">BUILDER</button>
+                <button class="mode-btn" onclick="setMode('paint')">PAINTER</button>
+                <button class="mode-btn" onclick="setMode('interact')">INTERACT</button>
+            </div>
+            <a href="index.html" class="back-link">EXIT</a>
+        </div>
+
+        <div class="status-box">
+            MODE: <span id="ui-mode">BUILDER</span><br>
+            HAND_POS: <span id="ui-pos">0, 0, 0</span><br>
+            ACTION: <span id="ui-action">IDLE</span>
+        </div>
+
+        <div class="hint-bar">
+            <div class="hint-text" id="hint-msg">จีบนิ้วชี้และนิ้วโป้งเพื่อ "หยิบและวาง" บล็อก 3 มิติ</div>
+        </div>
+    </div>
+
+    <script type="module">
+        // --- THREE.JS SETUP ---
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(window.devicePixelRatio);
+        document.getElementById('canvas-container').appendChild(renderer.domElement);
+
+        // Lighting
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+        scene.add(ambientLight);
+        const pointLight = new THREE.PointLight(0xff7300, 1);
+        pointLight.position.set(5, 5, 5);
+        scene.add(pointLight);
+
+        // Ground Grid
+        const gridHelper = new THREE.GridHelper(20, 20, 0x333333, 0x222222);
+        gridHelper.position.y = -2;
+        scene.add(gridHelper);
+
+        camera.position.z = 8;
+        camera.position.y = 1;
+
+        // Objects
+        let activeMode = 'build';
+        let objects = [];
+        let grabbedObject = null;
+        let paintLines = [];
+        let currentPaintLine = null;
+
+        // Virtual Cursor (Hand Representation)
+        const cursorGeo = new THREE.SphereGeometry(0.15, 32, 32);
+        const cursorMat = new THREE.MeshPhongMaterial({ color: 0x00f2ff, emissive: 0x00f2ff });
+        const cursor = new THREE.Mesh(cursorGeo, cursorMat);
+        scene.add(cursor);
+
+        // Initial Build Objects
+        function initBuildObjects() {
+            for (let i = 0; i < 6; i++) {
+                createCube( (Math.random() - 0.5) * 5, Math.random() * 2, (Math.random() - 0.5) * 5 );
+            }
+        }
+
+        function createCube(x, y, z) {
+            const geo = new THREE.BoxGeometry(1, 1, 1);
+            const mat = new THREE.MeshPhongMaterial({ 
+                color: 0xff7300, 
+                transparent: true, 
+                opacity: 0.8,
+                shininess: 100 
+            });
+            const cube = new THREE.Mesh(geo, mat);
+            cube.position.set(x, y, z);
+            scene.add(cube);
+            objects.push(cube);
+        }
+
+        initBuildObjects();
+
+        // --- MEDIAPIPE HANDS SETUP ---
+        const videoElement = document.getElementById('input_video');
+        const hands = new Hands({
+            locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`
+        });
+
+        hands.setOptions({
+            maxNumHands: 1,
+            modelComplexity: 1,
+            minDetectionConfidence: 0.7,
+            minTrackingConfidence: 0.7
+        });
+
+        function onResults(results) {
+            if (results.multiHandLandmarks && results.multiHandLandmarks.length > 0) {
+                const landmarks = results.multiHandLandmarks[0];
+                
+                // Convert landmarks to 3D Space
+                // Index finger tip (8)
+                const indexTip = landmarks[8];
+                const thumbTip = landmarks[4];
+                
+                // Normalize and map to world coords
+                const targetX = (1 - indexTip.x - 0.5) * 15;
+                const targetY = (0.5 - indexTip.y) * 10;
+                const targetZ = indexTip.z * -20; // Depth estimation
+
+                cursor.position.lerp(new THREE.Vector3(targetX, targetY, targetZ), 0.2);
+                
+                document.getElementById('ui-pos').textContent = `${targetX.toFixed(1)}, ${targetY.toFixed(1)}, ${targetZ.toFixed(1)}`;
+
+                // Gesture Detection: Pinch
+                const dist = Math.sqrt(
+                    Math.pow(indexTip.x - thumbTip.x, 2) + 
+                    Math.pow(indexTip.y - thumbTip.y, 2)
+                );
+                const isPinching = dist < 0.05;
+
+                if (isPinching) {
+                    handlePinchAction(cursor.position);
+                    document.getElementById('ui-action').textContent = "PINCHING";
+                    cursor.material.color.setHex(0xff7300);
+                } else {
+                    handleReleaseAction();
+                    document.getElementById('ui-action').textContent = "IDLE";
+                    cursor.material.color.setHex(0x00f2ff);
+                }
+            }
+        }
+
+        hands.onResults(onResults);
+
+        function handlePinchAction(pos) {
+            if (activeMode === 'build') {
+                if (!grabbedObject) {
+                    // Find nearest object
+                    let minDist = 1.5;
+                    objects.forEach(obj => {
+                        const d = obj.position.distanceTo(pos);
+                        if (d < minDist) {
+                            grabbedObject = obj;
+                        }
+                    });
+                }
+                if (grabbedObject) {
+                    grabbedObject.position.copy(pos);
+                    grabbedObject.material.emissive.setHex(0xffaa00);
+                }
+            } else if (activeMode === 'paint') {
+                if (!currentPaintLine) {
+                    // Start new line
+                    const points = [pos.clone()];
+                    const geometry = new THREE.BufferGeometry().setFromPoints(points);
+                    const material = new THREE.LineBasicMaterial({ color: 0x00f2ff, linewidth: 5 });
+                    currentPaintLine = { line: new THREE.Line(geometry, material), points: points };
+                    scene.add(currentPaintLine.line);
+                } else {
+                    // Add point to line
+                    currentPaintLine.points.push(pos.clone());
+                    currentPaintLine.line.geometry.setFromPoints(currentPaintLine.points);
+                }
+            }
+        }
+
+        function handleReleaseAction() {
+            if (grabbedObject) {
+                grabbedObject.material.emissive.setHex(0x000000);
+                grabbedObject = null;
+            }
+            if (currentPaintLine) {
+                paintLines.push(currentPaintLine);
+                currentPaintLine = null;
+            }
+        }
+
+        // --- UI CONTROLS ---
+        window.setMode = (mode) => {
+            activeMode = mode;
+            document.querySelectorAll('.mode-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelector(`[onclick="setMode('${mode}')"]`).classList.add('active');
+            document.getElementById('ui-mode').textContent = mode.toUpperCase();
+            
+            const hints = {
+                build: 'จีบนิ้วชี้และนิ้วโป้งเพื่อ "หยิบและวาง" บล็อก 3 มิติ',
+                paint: 'จีบนิ้วชี้และนิ้วโป้งเพื่อ "เริ่มวาดภาพ" กลางอากาศ',
+                interact: 'เลื่อนมือเพื่อ "ผลัก" วัตถุให้กระจายออกไป'
+            };
+            document.getElementById('hint-msg').textContent = hints[mode];
+
+            // Mode transitions
+            if (mode === 'interact') {
+                objects.forEach(obj => {
+                    obj.velocity = new THREE.Vector3( (Math.random()-0.5)*0.1, 0, (Math.random()-0.5)*0.1 );
+                });
+            }
+        };
+
+        // --- ANIMATION LOOP ---
+        function animate() {
+            requestAnimationFrame(animate);
+
+            if (activeMode === 'interact') {
+                objects.forEach(obj => {
+                    // Physics-like movement
+                    obj.position.add(obj.velocity || new THREE.Vector3());
+                    if (obj.position.distanceTo(cursor.position) < 2) {
+                        const dir = obj.position.clone().sub(cursor.position).normalize();
+                        obj.position.add(dir.multiplyScalar(0.2));
+                    }
+                    // Boundary
+                    if (Math.abs(obj.position.x) > 10) obj.position.x *= -0.9;
+                    if (Math.abs(obj.position.z) > 10) obj.position.z *= -0.9;
+                });
+            }
+
+            renderer.render(scene, camera);
+        }
+
+        animate();
+
+        // Camera setup
+        const cameraUtils = new Camera(videoElement, {
+            onFrame: async () => {
+                await hands.send({image: videoElement});
+            },
+            width: 640,
+            height: 480
+        });
+
+        cameraUtils.start().then(() => {
+            document.getElementById('loading-screen').style.display = 'none';
+        });
+
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+    </script>
+</body>
+</html>

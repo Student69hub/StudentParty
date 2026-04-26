@@ -1,0 +1,243 @@
+/* ===== People's Party Style Policy Hub ===== */
+:root {
+    --pp-navy: #00213B;
+    --pp-orange: #F47932;
+    --pp-gray-light: #F3F4F6;
+    --pp-white: #FFFFFF;
+    --pp-font: 'Prompt', sans-serif;
+}
+
+.policy-hub-section {
+    background: var(--pp-navy);
+    padding: 6rem 0;
+    color: var(--pp-white);
+    font-family: var(--pp-font);
+    overflow: hidden;
+}
+
+/* Hub Header & Search */
+.hub-header {
+    text-align: center;
+    margin-bottom: 4rem;
+}
+
+.hub-header .section-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--pp-white);
+    margin-bottom: 2rem;
+}
+
+.search-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    max-width: 600px;
+    margin: 0 auto 1.5rem;
+}
+
+.search-box {
+    background: var(--pp-gray-light);
+    border-radius: 999px;
+    display: flex;
+    align-items: center;
+    padding: 0.8rem 1.5rem;
+    flex: 1;
+}
+
+.search-icon {
+    margin-right: 0.8rem;
+    font-size: 1.2rem;
+}
+
+.search-box input {
+    background: transparent;
+    border: none;
+    outline: none;
+    width: 100%;
+    font-family: var(--pp-font);
+    font-size: 1rem;
+    color: #333;
+}
+
+.btn-clear {
+    background: var(--pp-gray-light);
+    color: #444;
+    border: none;
+    padding: 0.8rem 1.5rem;
+    border-radius: 999px;
+    font-family: var(--pp-font);
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.btn-clear:hover {
+    background: #e5e7eb;
+}
+
+.policy-count {
+    font-size: 0.9rem;
+    opacity: 0.8;
+}
+
+#count-num {
+    color: var(--pp-orange);
+    font-weight: 700;
+}
+
+/* Featured Slider */
+.policy-slider-wrapper {
+    position: relative;
+    margin-bottom: 2rem;
+}
+
+.policy-slider {
+    display: flex;
+    gap: 1.5rem;
+    padding: 2rem 0;
+    width: max-content;
+    animation: autoScrollInfinite 40s linear infinite;
+}
+
+.policy-slider:hover {
+    animation-play-state: paused;
+}
+
+@keyframes autoScrollInfinite {
+    0% {
+        transform: translateX(0);
+    }
+
+    100% {
+        transform: translateX(-50%);
+    }
+}
+
+.policy-card-item {
+    flex: 0 0 340px;
+    border-radius: 1.5rem;
+    overflow: hidden;
+    aspect-ratio: 16/9;
+    position: relative;
+    cursor: pointer;
+    transition: transform 0.4s ease, filter 0.4s ease;
+    filter: brightness(0.6);
+    /* Mimic the active focus effect */
+}
+
+.policy-card-item:hover,
+.policy-card-item:active {
+    filter: brightness(1);
+    transform: scale(1.05);
+    z-index: 10;
+}
+
+.policy-card-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.policy-card-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 1.5rem;
+}
+
+.policy-card-item h3 {
+    color: white;
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin: 0;
+}
+
+.policy-card-item p {
+    display: none;
+    /* Reference site has minimal text in slider */
+}
+
+/* Category Grid */
+.category-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+    margin-top: 2rem;
+}
+
+.category-card {
+    border-radius: 1.5rem;
+    overflow: hidden;
+    position: relative;
+    aspect-ratio: 16/9;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.category-card:hover {
+    transform: translateY(-5px);
+}
+
+.category-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.category-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(45deg, var(--pp-navy), transparent 70%);
+    display: flex;
+    align-items: flex-end;
+    padding: 2rem;
+}
+
+.category-info h3 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 0.5rem;
+}
+
+.policy-qty {
+    background: var(--pp-orange);
+    color: white;
+    padding: 0.3rem 0.8rem;
+    border-radius: 999px;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.btn-all-policies {
+    color: white;
+    text-decoration: none;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    padding: 0.8rem 2rem;
+    border-radius: 999px;
+    transition: all 0.3s ease;
+}
+
+.btn-all-policies:hover {
+    background: white;
+    color: var(--pp-navy);
+}
+
+@media (max-width: 768px) {
+    .category-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .hub-header .section-title {
+        font-size: 2rem;
+    }
+
+    .policy-card-item {
+        flex: 0 0 280px;
+    }
+}

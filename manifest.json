@@ -1,0 +1,21 @@
+{
+  "name": "พรรคนักเรียน - โรซารีโอวิทยา",
+  "short_name": "พรรคนักเรียน",
+  "description": "เสียงของนักเรียน เพื่อโรงเรียนที่ดีกว่า",
+  "start_url": "/index.html",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#ff7300",
+  "icons": [
+    {
+      "src": "assets/favicon.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "assets/favicon.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

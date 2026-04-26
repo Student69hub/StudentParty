@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <link rel="icon" href="assets/favicon.png" type="image/png">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-sports Hub | พรรคนักเรียนสภา 69</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <style>
+        .esports-header {
+            text-align: center;
+            margin-top: 6rem;
+            margin-bottom: 4rem;
+        }
+
+        .esports-subtitle {
+            font-size: 1.25rem;
+            color: var(--color-gray-600);
+            max-width: 600px;
+            margin: 1rem auto;
+        }
+
+        .tournament-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2.5rem;
+            margin-bottom: 5rem;
+        }
+
+        .tournament-card {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border-radius: var(--radius-2xl);
+            padding: 2.5rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .tournament-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 6px;
+            background: linear-gradient(90deg, var(--color-primary), var(--color-secondary));
+        }
+
+        .tournament-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(255, 115, 0, 0.15);
+        }
+
+        .tournament-header {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .game-logo {
+            width: 80px;
+            height: 80px;
+            border-radius: 16px;
+            object-fit: cover;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .tournament-info h2 {
+            margin: 0 0 0.5rem 0;
+            font-size: 1.75rem;
+            color: var(--color-dark);
+            font-weight: 800;
+        }
+
+        .badge-live {
+            background: #ef4444;
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            letter-spacing: 0.5px;
+        }
+
+        .badge-live::before {
+            content: '';
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background: white;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                opacity: 1;
+                transform: scale(1);
+            }
+
+            50% {
+                opacity: 0.5;
+                transform: scale(1.5);
+            }
+
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .tournament-desc {
+            color: var(--color-gray-600);
+            line-height: 1.6;
+            margin-bottom: 2rem;
+            flex-grow: 1;
+        }
+
+        .tournament-actions {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1rem;
+        }
+
+        .action-btn {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem 1.5rem;
+            border-radius: var(--radius-lg);
+            background: var(--color-gray-50);
+            color: var(--color-dark);
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            border: 1px solid var(--color-gray-200);
+        }
+
+        .action-btn:hover {
+            background: var(--color-primary-light);
+            color: var(--color-primary);
+            border-color: var(--color-primary-light);
+            transform: translateX(5px);
+        }
+
+        .action-btn-primary {
+            background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+            color: white;
+            border: none;
+            box-shadow: 0 4px 15px rgba(255, 115, 0, 0.3);
+        }
+
+        .action-btn-primary:hover {
+            background: linear-gradient(135deg, var(--color-secondary), var(--color-primary));
+            color: white;
+            box-shadow: 0 6px 20px rgba(255, 115, 0, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .empty-tournament {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 200px;
+            background: rgba(255, 255, 255, 0.5);
+            border: 2px dashed var(--color-gray-300);
+            border-radius: var(--radius-2xl);
+            color: var(--color-gray-500);
+            font-weight: 600;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="particles-js-global"
+        style="position: fixed; width: 100vw; height: 100vh; top: 0; left: 0; z-index: -2; pointer-events: none;"></div>
+
+    <nav class="nav">
+        <div class="nav-inner">
+            <a href="index.html" class="nav-logo">
+                <img src="assets/favicon.png" alt="โลโก้พรรคนักเรียน" class="nav-logo-img">
+                <span class="nav-logo-text">พรรคนักเรียน</span>
+            </a>
+            <button type="button" class="nav-toggle" id="nav-toggle" aria-label="เปิดเมนู">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <ul class="nav-links" id="nav-links">
+                <li><a href="index.html">หน้าแรก</a></li>
+                <li><a href="policy.html">นโยบาย</a></li>
+                <li class="nav-item-dropdown">
+                    <a href="#" class="nav-dropdown-toggle active">กิจกรรม ▾</a>
+                    <ul class="nav-dropdown-menu">
+                        <li><a href="esports.html" class="active">E-Sports</a></li>
+                        <li><a href="achievements.html">ผลงาน</a></li>
+                        <li><a href="gallery.html">แกลเลอรี</a></li>
+                    </ul>
+                </li>
+
+
+                <li class="nav-item-dropdown">
+                    <a href="#" class="nav-dropdown-toggle">ความคิดเห็น ▾</a>
+                    <ul class="nav-dropdown-menu">
+                        <li><a href="feedback.html">ส่งความเห็น</a></li>
+                        <li><a href="feedback-replies.html">การตอบกลับจากแอดมิน</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="page-enter">
+        <div class="container">
+            <div class="esports-header" data-aos="fade-up">
+                <h1 class="section-title">🎮 E-sports Hub</h1>
+                <p class="esports-subtitle">ศูนย์รวมการแข่งขันทัวร์นาเมนต์ E-sports ประจำปีการศึกษา 2569</p>
+            </div>
+
+            <div class="tournament-grid">
+                <!-- eFootball Tournament Card -->
+                <div class="tournament-card" data-aos="fade-up" data-tilt data-tilt-max="5" data-tilt-speed="400"
+                    data-tilt-glare data-tilt-max-glare="0.2">
+                    <div class="tournament-header">
+                        <img src="assets/esports-card.png" alt="eFootball Logo" class="game-logo"
+                            onerror="this.src='logo-mark.svg'">
+                        <div class="tournament-info">
+                            <h2>eFootball Student League</h2>
+                            <div class="badge-live">LIVE NOW</div>
+                        </div>
+                    </div>
+                    <p class="tournament-desc">การแข่งขัน eFootball เพื่อค้นหาสุดยอดผู้เล่นระดับโรงเรียน เดือดทุกแมตช์
+                        วัดกันที่แทคติกและฝีมือ ศึกนี้ใครจะเป็นแชมป์?</p>
+
+                    <div class="tournament-actions">
+                        <a href="efootball-register.html" class="action-btn action-btn-primary">
+                            <span>📝 สมัครเข้าร่วมแข่งขัน</span>
+                            <span>→</span>
+                        </a>
+                        <a href="efootball.html" class="action-btn">
+                            <span>🏆 ตารางคะแนนและผลการแข่ง</span>
+                            <span>→</span>
+                        </a>
+                        <a href="efootball-players.html" class="action-btn">
+                            <span>👥 รายชื่อผู้เล่นทั้งหมด</span>
+                            <span>→</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Coming soon -->
+                <div class="empty-tournament" data-aos="fade-up" data-aos-delay="100">
+                    <p>🔜 เร็วๆ นี้: ทัวร์นาเมนต์ถัดไป</p>
+                </div>
+            </div>
+        </div>
+    </main>
+    <footer class="footer">
+        <div class="footer-inner">
+            <div class="footer-bottom">
+                © พรรคนักเรียน — สานหน้าสู่อนาคต ด้วยนโยบายที่ทำได้จริง
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.0/vanilla-tilt.min.js"></script>
+    <script src="interactions.js"></script>
+    <script>
+        AOS.init({ once: true, offset: 50 });
+        VanillaTilt.init(document.querySelectorAll(".tournament-card"));
+    </script>
+</body>
+
+</html>

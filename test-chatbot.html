@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <title>Test Chatbot</title>
+  <style>
+    body { font-family: Arial; max-width: 500px; margin: 50px auto; }
+    #output { border: 1px solid #ccc; padding: 10px; height: 300px; overflow-y: auto; margin: 10px 0; background: #f9f9f9; }
+    #input { width: 80%; padding: 8px; }
+    button { padding: 8px 15px; cursor: pointer; }
+    .user { color: blue; margin: 5px 0; }
+    .bot { color: green; margin: 5px 0; }
+    .error { color: red; }
+  </style>
+</head>
+<body>
+  <h1>🧪 Test Chatbot API</h1>
+  
+  <div id="output"></div>
+  
+  <input id="input" type="text" placeholder="พิมพ์ข้อความ..." />
+  <button onclick="sendMessage()">ส่ง</button>
+  <button onclick="clearOutput()">ลบ</button>
+  
+  <script>
+    const API_BASE = 'http://127.0.0.1:3001';
+    let history = [];
+
+    function log(text, type = 'info') {
+      const output = document.getElementById('output');
+      const div = document.createElement('div');
+      div.className = type;
+      div.textContent = text;
+      output.appendChild(div);
+      output.scrollTop = output.scrollHeight;
+    }
+
+    function clearOutput() {
+      document.getElementById('output').innerHTML = '';
+      history = [];
+    }
+
+    async function sendMessage() {
+      const input = document.getElementById('input');
+      const text = input.value.trim();
+      
+      if (!text) return;
+      
+      log(`👤 คุณ: ${text}`, 'user');
+      input.value = '';
+      
+      // Add user message to history (Gemini format)
+      history.push({ role: 'user', parts: [{ text }] });
+      
+      try {
+        log('⏳ กำลังส่ง...', 'info');
+        
+        const response = await fetch(`${API_BASE}/api/chat`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            history: history,
+            systemPrompt: 'You are a helpful Thai assistant. Keep responses concise and friendly.'
+          })
+        });
+        
+        log(`📥 Response Status: ${response.status}`, 'info');
+        const data = await response.json();
+        
+        if (data.ok) {
+          log(`🤖 Bot: ${data.text}`, 'bot');
+          // Add bot response to history
+          history.push({ role: 'model', parts: [{ text: data.text }] });
+        } else {
+          log(`❌ Error (${data.errorType}): ${data.message}`, 'error');
+        }
+      } catch (err) {
+        log(`❌ Network Error: ${err.message}`, 'error');
+      }
+    }
+
+    // Allow Enter key to send
+    document.getElementById('input').addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') sendMessage();
+    });
+
+    log('✅ Ready! Type a message and click Send', 'info');
+  </script>
+</body>
+</html>

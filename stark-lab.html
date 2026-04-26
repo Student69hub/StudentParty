@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stark Lab: Holographic Builder | พรรคนักเรียน</title>
+    
+    <!-- MediaPipe Hands -->
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js" crossorigin="anonymous"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;600;700&family=Prompt:wght@400;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --stark-orange: #ff7300;
+            --stark-cyan: #00f2ff;
+            --stark-glow: rgba(255, 115, 0, 0.5);
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background: #000;
+            color: white;
+            font-family: 'Prompt', sans-serif;
+            overflow: hidden;
+        }
+
+        #app-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            background: radial-gradient(circle at center, #1a202c 0%, #000 100%);
+        }
+
+        #video-container {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            width: 240px;
+            height: 180px;
+            border-radius: 1rem;
+            overflow: hidden;
+            border: 2px solid var(--stark-orange);
+            box-shadow: 0 0 20px var(--stark-glow);
+            z-index: 10;
+            transform: scaleX(-1);
+        }
+
+        #input_video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        #main_canvas {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 5;
+        }
+
+        .ui-overlay {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            z-index: 20;
+            padding: 2rem;
+        }
+
+        .stark-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .header-title {
+            font-size: 1.5rem;
+            font-weight: 800;
+            letter-spacing: 2px;
+            color: var(--stark-orange);
+            text-shadow: 0 0 10px var(--stark-glow);
+        }
+
+        .status-panel {
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 115, 0, 0.3);
+            padding: 1rem;
+            border-radius: 0.5rem;
+            font-family: monospace;
+            font-size: 0.8rem;
+            color: var(--stark-orange);
+            backdrop-filter: blur(10px);
+        }
+
+        .instruction-box {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(255, 115, 0, 0.1);
+            border: 1px solid var(--stark-orange);
+            padding: 1rem 2rem;
+            border-radius: 999px;
+            font-weight: 700;
+            backdrop-filter: blur(5px);
+            animation: breathe 2s infinite ease-in-out;
+        }
+
+        @keyframes breathe {
+            0%, 100% { opacity: 0.8; transform: translateX(-50%) scale(1); }
+            50% { opacity: 1; transform: translateX(-50%) scale(1.05); }
+        }
+
+        .back-btn {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            padding: 0.8rem 1.5rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            text-decoration: none;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            pointer-events: auto;
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover {
+            background: var(--stark-orange);
+            border-color: var(--stark-orange);
+        }
+
+        #loading-overlay {
+            position: fixed;
+            inset: 0;
+            background: #000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .loader-ring {
+            width: 100px;
+            height: 100px;
+            border: 4px solid transparent;
+            border-top: 4px solid var(--stark-orange);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="loading-overlay">
+        <div class="loader-ring"></div>
+        <p style="margin-top: 2rem; letter-spacing: 2px; color: var(--stark-orange);">INITIALIZING STARK LAB...</p>
+    </div>
+
+    <div id="app-container">
+        <canvas id="main_canvas"></canvas>
+        
+        <div id="video-container">
+            <video id="input_video"></video>
+        </div>
+
+        <div class="ui-overlay">
+            <div class="stark-header">
+                <div class="header-title">STARK LAB <span style="color:#fff;">V2.0</span></div>
+                <div class="status-panel">
+                    OBJECT_COUNT: <span id="obj-count">0</span><br>
+                    HAND_TRACKING: <span id="tracking-status">OFFLINE</span><br>
+                    GESTURE: <span id="gesture-type">NONE</span>
+                </div>
+            </div>
+
+            <a href="index.html" class="back-btn">← EXIT LAB</a>
+
+            <div class="instruction-box">
+                จีบนิ้วชี้และนิ้วโป้งเข้าหากันเพื่อ "หยิบ" วัตถุ และลากไปวางที่อื่น
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        const videoElement = document.getElementById('input_video');
+        const canvasElement = document.getElementById('main_canvas');
+        const canvasCtx = canvasElement.getContext('2d');
+        const objCountEl = document.getElementById('obj-count');
+        const trackingStatusEl = document.getElementById('tracking-status');
+        const gestureTypeEl = document.getElementById('gesture-type');
+
+        let width, height;
+        let objects = [];
+        let grabbedObject = null;
+        let lastHandPos = { x: 0, y: 0 };
+
+        // Initialize Canvas Size
+        function resize() {
+            width = window.innerWidth;
+            height = window.innerHeight;
+            canvasElement.width = width;
+            canvasElement.height = height;
+            initObjects();
+        }
+
+        function initObjects() {
+            objects = [];
+            const labels = ["นโยบาย E-Sports", "ห้องน้ำสะอาด", "โรงอาหารใหม่", "สวัสดิการนักเรียน", "กระดานไอเดีย"];
+            for (let i = 0; i < 5; i++) {
+                objects.push({
+                    x: Math.random() * (width - 200) + 100,
+                    y: Math.random() * (height - 200) + 100,
+                    w: 220,
+                    h: 80,
+                    label: labels[i],
+                    color: '#ff7300',
+                    rotation: (Math.random() - 0.5) * 0.2
+                });
+            }
+            objCountEl.textContent = objects.length;
+        }
+
+        window.addEventListener('resize', resize);
+        resize();
+
+        // MediaPipe Hands Setup
+        const hands = new Hands({
+            locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`
+        });
+
+        hands.setOptions({
+            maxNumHands: 1,
+            modelComplexity: 1,
+            minDetectionConfidence: 0.7,
+            minTrackingConfidence: 0.7
+        });
+
+        function onResults(results) {
+            canvasCtx.save();
+            // Clear Canvas
+            canvasCtx.clearRect(0, 0, width, height);
+
+            // Draw Background Grid
+            drawGrid();
+
+            // Draw Objects
+            objects.forEach(obj => drawObject(obj));
+
+            if (results.multiHandLandmarks && results.multiHandLandmarks.length > 0) {
+                trackingStatusEl.textContent = "ONLINE";
+                trackingStatusEl.style.color = "#00f2ff";
+
+                const landmarks = results.multiHandLandmarks[0];
+                
+                // Mirror coordinates
+                const handX = (1 - landmarks[8].x) * width;
+                const handY = landmarks[8].y * height;
+                
+                // Detect Pinch (Distance between Thumb Tip [4] and Index Tip [8])
+                const thumb = landmarks[4];
+                const index = landmarks[8];
+                const dist = Math.sqrt(Math.pow(thumb.x - index.x, 2) + Math.pow(thumb.y - index.y, 2));
+
+                const isPinching = dist < 0.05;
+
+                if (isPinching) {
+                    gestureTypeEl.textContent = "PINCH / GRAB";
+                    gestureTypeEl.style.color = "#ff7300";
+                    
+                    if (!grabbedObject) {
+                        // Try to find object to grab
+                        grabbedObject = objects.find(obj => 
+                            handX > obj.x - obj.w/2 && handX < obj.x + obj.w/2 &&
+                            handY > obj.y - obj.h/2 && handY < obj.y + obj.h/2
+                        );
+                    }
+
+                    if (grabbedObject) {
+                        grabbedObject.x = handX;
+                        grabbedObject.y = handY;
+                        grabbedObject.isGrabbed = true;
+                    }
+                } else {
+                    gestureTypeEl.textContent = "NONE";
+                    gestureTypeEl.style.color = "#fff";
+                    if (grabbedObject) grabbedObject.isGrabbed = false;
+                    grabbedObject = null;
+                }
+
+                // Draw Hand Cursor
+                drawHandCursor(handX, handY, isPinching);
+            } else {
+                trackingStatusEl.textContent = "SEARCHING...";
+                trackingStatusEl.style.color = "#ff7300";
+            }
+
+            canvasCtx.restore();
+        }
+
+        hands.onResults(onResults);
+
+        function drawGrid() {
+            canvasCtx.strokeStyle = 'rgba(255, 115, 0, 0.05)';
+            canvasCtx.lineWidth = 1;
+            const step = 50;
+            for (let x = 0; x < width; x += step) {
+                canvasCtx.beginPath();
+                canvasCtx.moveTo(x, 0);
+                canvasCtx.lineTo(x, height);
+                canvasCtx.stroke();
+            }
+            for (let y = 0; y < height; y += step) {
+                canvasCtx.beginPath();
+                canvasCtx.moveTo(0, y);
+                canvasCtx.lineTo(width, y);
+                canvasCtx.stroke();
+            }
+        }
+
+        function drawObject(obj) {
+            canvasCtx.save();
+            canvasCtx.translate(obj.x, obj.y);
+            canvasCtx.rotate(obj.rotation);
+
+            const isGrabbed = obj.isGrabbed;
+            
+            // Outer Glow
+            canvasCtx.shadowBlur = isGrabbed ? 30 : 15;
+            canvasCtx.shadowColor = 'rgba(255, 115, 0, 0.5)';
+
+            // Glass Panel
+            canvasCtx.fillStyle = isGrabbed ? 'rgba(255, 115, 0, 0.2)' : 'rgba(255, 115, 0, 0.1)';
+            canvasCtx.strokeStyle = isGrabbed ? '#ff7300' : 'rgba(255, 115, 0, 0.5)';
+            canvasCtx.lineWidth = 2;
+            
+            canvasCtx.beginPath();
+            canvasCtx.roundRect(-obj.w/2, -obj.h/2, obj.w, obj.h, 10);
+            canvasCtx.fill();
+            canvasCtx.stroke();
+
+            // Text
+            canvasCtx.fillStyle = '#fff';
+            canvasCtx.font = 'bold 1.1rem Prompt';
+            canvasCtx.textAlign = 'center';
+            canvasCtx.textBaseline = 'middle';
+            canvasCtx.shadowBlur = 0;
+            canvasCtx.fillText(obj.label, 0, 0);
+
+            // Tech Decorations
+            canvasCtx.strokeStyle = 'rgba(255, 115, 0, 0.8)';
+            canvasCtx.lineWidth = 4;
+            canvasCtx.beginPath();
+            canvasCtx.moveTo(-obj.w/2, -obj.h/2 + 20);
+            canvasCtx.lineTo(-obj.w/2, -obj.h/2);
+            canvasCtx.lineTo(-obj.w/2 + 20, -obj.h/2);
+            canvasCtx.stroke();
+
+            canvasCtx.restore();
+        }
+
+        function drawHandCursor(x, y, isPinching) {
+            canvasCtx.save();
+            
+            // Aiming Circle
+            canvasCtx.strokeStyle = isPinching ? '#ff7300' : '#00f2ff';
+            canvasCtx.lineWidth = 2;
+            canvasCtx.shadowBlur = 10;
+            canvasCtx.shadowColor = canvasCtx.strokeStyle;
+
+            canvasCtx.beginPath();
+            canvasCtx.arc(x, y, isPinching ? 15 : 25, 0, Math.PI * 2);
+            canvasCtx.stroke();
+
+            // Crosshair
+            const size = 10;
+            canvasCtx.beginPath();
+            canvasCtx.moveTo(x - size, y); canvasCtx.lineTo(x + size, y);
+            canvasCtx.moveTo(x, y - size); canvasCtx.lineTo(x, y + size);
+            canvasCtx.stroke();
+
+            if (isPinching) {
+                canvasCtx.fillStyle = 'rgba(255, 115, 0, 0.3)';
+                canvasCtx.fill();
+            }
+
+            canvasCtx.restore();
+        }
+
+        // Camera setup
+        const camera = new Camera(videoElement, {
+            onFrame: async () => {
+                await hands.send({image: videoElement});
+            },
+            width: 640,
+            height: 480
+        });
+
+        camera.start().then(() => {
+            document.getElementById('loading-overlay').style.display = 'none';
+        });
+
+    </script>
+</body>
+</html>

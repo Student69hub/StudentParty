@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <link rel="icon" href="assets/favicon.png" type="image/png">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>รายละเอียดนโยบาย | พรรคนักเรียน</title>
+    <meta name="description" content="อ่านรายละเอียดนโยบายของพรรคนักเรียน">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div id="particles-js-global"
+        style="position: fixed; width: 100vw; height: 100vh; top: 0; left: 0; z-index: -2; pointer-events: none;"></div>
+
+    <nav class="nav">
+        <div class="nav-inner">
+            <a href="index.html" class="nav-logo">
+                <img src="assets/favicon.png" alt="โลโก้พรรคนักเรียน" class="nav-logo-img">
+                <span class="nav-logo-text">พรรคนักเรียน</span>
+            </a>
+            <div style="display:flex;align-items:center;gap:.5rem;">
+                <button type="button" class="nav-toggle" id="nav-toggle" aria-label="เปิดเมนู">
+                    <span></span><span></span><span></span>
+                </button>
+            </div>
+            <ul class="nav-links" id="nav-links">
+                <li><a href="index.html">หน้าแรก</a></li>
+                <li><a href="policy.html" class="active">นโยบาย</a></li>
+                <li class="nav-item-dropdown">
+                    <a href="#" class="nav-dropdown-toggle">กิจกรรม ▾</a>
+                    <ul class="nav-dropdown-menu">
+                        <li><a href="esports.html">E-Sports</a></li>
+                        <li><a href="achievements.html">ผลงาน</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item-dropdown">
+                    <a href="#" class="nav-dropdown-toggle">ความคิดเห็น ▾</a>
+                    <ul class="nav-dropdown-menu">
+                        <li><a href="feedback.html">ส่งความเห็น</a></li>
+                        <li><a href="feedback-replies.html">การตอบกลับจากแอดมิน</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <main id="main-content" class="page-enter">
+        <section class="policy-hero">
+            <div class="container">
+                <h1 class="policy-hero-title" id="page-title">กำลังโหลด...</h1>
+            </div>
+        </section>
+
+        <section class="content-section" style="padding: 4rem 0;">
+            <div class="container" id="policy-container" style="display: none; max-width: 800px; margin: 0 auto;">
+                <div id="policy-image-container" style="width: 100%; border-radius: 1rem; overflow: hidden; margin-bottom: 2.5rem; background: rgba(0,0,0,0.2); display: none;">
+                    <img id="policy-image" src="" alt="Policy Image" style="width: 100%; height: auto; display: block; object-fit: cover;">
+                </div>
+                
+                <div class="policy-card--glass" style="padding: 2.5rem; border-radius: 1.5rem; background: #ffffff; box-shadow: 0 20px 50px rgba(255, 115, 0, 0.1); border: 1px solid #f1f5f9;">
+                    <span id="policy-category" style="background: #fff8f0; color: #ff5500; border: 2px solid #ff7300; padding: 0.5rem 1.2rem; border-radius: 9999px; font-size: 1rem; font-weight: 800; margin-bottom: 1.5rem; display: inline-block; box-shadow: 0 4px 12px rgba(255, 115, 0, 0.15);"></span>
+                    <h2 id="policy-content-title" style="margin-bottom: 2rem; font-size: 2.6rem; font-weight: 900; color: #000000; line-height: 1.3; letter-spacing: -0.02em;"></h2>
+                    
+                    <div id="policy-desc-card" style="font-size: 1.4rem; color: #ff4500; margin-bottom: 2.5rem; padding: 2.2rem; background: #ffffff; border: 2px solid #fff3e6; border-left: 10px solid #ff7300; border-radius: 1rem; white-space: pre-wrap; font-weight: 800; display: none; line-height: 1.6; box-shadow: 0 10px 30px rgba(255, 115, 0, 0.08);"></div>
+
+                    <div id="policy-content" style="color: #1a202c; line-height: 1.8; font-size: 1.2rem; white-space: pre-wrap; padding-top: 2rem; border-top: 1px solid #f1f5f9; font-weight: 400;">
+                    </div>
+                </div>
+
+                <div style="margin-top:2rem; text-align: center;">
+                    <a href="feedback.html" class="btn btn-primary">แสดงความคิดเห็น</a>
+                    <a href="policy.html" class="btn btn-outline" style="margin-left:1rem;">← กลับไปนโยบายทั้งหมด</a>
+                </div>
+            </div>
+            
+            <div id="error-container" style="display: none; text-align: center; padding: 4rem 1rem;">
+                <h2 style="font-size: 2rem; color: #fca5a5; margin-bottom: 1rem;">ไม่พบข้อมูลนโยบาย</h2>
+                <p style="color: #94a3b8; margin-bottom: 2rem;">อาจถูกลบไปแล้วหรือลิงก์ไม่ถูกต้อง</p>
+                <a href="policy.html" class="btn btn-primary">กลับไปดูนโยบายทั้งหมด</a>
+            </div>
+        </section>
+
+        <footer class="footer">
+            <div class="footer-inner">
+                <div class="footer-grid">
+                    <div class="footer-brand">พรรคนักเรียน</div>
+                    <div class="footer-social">
+                        <a href="https://www.instagram.com/students.party_?igsh=NjV6NWlrMzR4dXJu" target="_blank"
+                            rel="noopener noreferrer" class="instagram" title="Instagram">@students.party_</a>
+                    </div>
+                </div>
+                <div class="footer-bottom">
+                    © พรรคนักเรียน — สร้างสรรค์เพื่อนักเรียน โดยนักเรียน
+                </div>
+            </div>
+        </footer>
+    </main>
+
+    <script src="script.js"></script>
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script src="interactions.js"></script>
+    
+    <!-- Firebase System -->
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js';
+        import { getDatabase, ref, get } from 'https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js';
+
+        const firebaseConfig = {
+      apiKey: "AIzaSyCzJxqnulMiNH_yyjJhuNwhOKTf49zqmL4",
+      authDomain: "students-party.firebaseapp.com",
+      databaseURL: "https://students-party-default-rtdb.asia-southeast1.firebasedatabase.app",
+      projectId: "students-party",
+      storageBucket: "students-party.firebasestorage.app",
+      messagingSenderId: "382151217353",
+      appId: "1:382151217353:web:6e8ec1ad891fc9763c7d18",
+      measurementId: "G-PF2SHZX7FB"
+    };
+
+        const app = initializeApp(firebaseConfig, "policy-detail");
+        const db = getDatabase(app);
+
+        // Get ID from URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const policyId = urlParams.get('id');
+
+        async function loadPolicy() {
+            if (!policyId) {
+                showError();
+                return;
+            }
+
+            try {
+                const snapshot = await get(ref(db, `policies/${policyId}`));
+                if (snapshot.exists()) {
+                    const data = snapshot.val();
+                    
+                    document.title = `${data.title} | นโยบายพรรคนักเรียน`;
+                    document.getElementById('page-title').textContent = data.title;
+                    
+                    document.getElementById('policy-category').textContent = data.category || '[นโยบาย]';
+                    document.getElementById('policy-content-title').textContent = data.title;
+                    
+                    const descCard = document.getElementById('policy-desc-card');
+                    if (data.description) {
+                        descCard.textContent = data.description;
+                        descCard.style.display = 'block';
+                    } else {
+                        descCard.style.display = 'none';
+                    }
+
+                    document.getElementById('policy-content').textContent = data.content || 'ไม่มีรายละเอียดเพิ่มเติม';
+                    
+                    if (data.imageUrl) {
+                        document.getElementById('policy-image').src = data.imageUrl;
+                        document.getElementById('policy-image').style.display = 'block';
+                        document.getElementById('policy-image-container').style.display = 'block';
+                    } else {
+                        document.getElementById('policy-image-container').style.display = 'none';
+                    }
+                    
+                    document.getElementById('policy-container').style.display = 'block';
+                } else {
+                    showError();
+                }
+            } catch (error) {
+                console.error("Error fetching policy:", error);
+                showError();
+            }
+        }
+
+        function showError() {
+            document.getElementById('page-title').textContent = 'ข้อผิดพลาด';
+            document.getElementById('page-desc').textContent = '';
+            document.getElementById('error-container').style.display = 'block';
+        }
+
+        loadPolicy();
+    </script>
+</body>
+</html>

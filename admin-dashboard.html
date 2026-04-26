@@ -1,0 +1,1866 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <link rel="icon" href="assets/favicon.png" type="image/png">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ศูนย์บัญชาการพรรคนักเรียน | Admin Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            background-color: #0f172a;
+            color: #f8fafc;
+        }
+
+        .admin-layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .admin-sidebar {
+            width: 280px;
+            background: rgba(15, 23, 42, 0.95);
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 2rem 1rem;
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            overflow-y: auto;
+            backdrop-filter: blur(10px);
+            z-index: 100;
+        }
+
+        .admin-brand {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0 1rem 2rem 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 2rem;
+        }
+
+        .admin-brand img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+        }
+
+        .admin-brand h2 {
+            font-size: 1.2rem;
+            font-weight: 800;
+            color: #fff;
+            margin: 0;
+            line-height: 1.2;
+        }
+
+        .admin-brand p {
+            font-size: 0.8rem;
+            color: #94a3b8;
+            margin: 0;
+        }
+
+        .admin-menu {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .admin-menu-item {
+            padding: 1rem 1.25rem;
+            border-radius: 0.75rem;
+            color: #cbd5e1;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .admin-menu-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: #fff;
+        }
+
+        .admin-menu-item.active {
+            background: linear-gradient(135deg, rgba(255, 115, 0, 0.2), rgba(252, 163, 17, 0.2));
+            color: var(--color-primary);
+            border: 1px solid rgba(255, 115, 0, 0.3);
+        }
+
+        .admin-content {
+            flex: 1;
+            margin-left: 280px;
+            padding: 2rem 3rem;
+        }
+
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2.5rem;
+        }
+
+        .admin-title {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: #fff;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .admin-panel {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .admin-panel.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Card Styles */
+        .admin-card {
+            background: rgba(30, 41, 59, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .admin-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .admin-card-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        /* Form Styles */
+        .admin-form-group {
+            margin-bottom: 1.25rem;
+        }
+
+        .admin-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #cbd5e1;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .admin-input,
+        .admin-textarea,
+        .admin-select {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 0.5rem;
+            color: #fff;
+            font-family: inherit;
+            font-size: 1rem;
+            transition: all 0.2s;
+        }
+
+        .admin-input:focus,
+        .admin-textarea:focus,
+        .admin-select:focus {
+            outline: none;
+            border-color: var(--color-primary);
+            box-shadow: 0 0 0 2px rgba(255, 115, 0, 0.2);
+        }
+
+        .admin-textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .admin-btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .admin-btn-primary {
+            background: linear-gradient(135deg, var(--color-primary), var(--color-accent));
+            color: #fff;
+        }
+
+        .admin-btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(255, 115, 0, 0.3);
+        }
+
+        .admin-btn-danger {
+            background: rgba(220, 38, 38, 0.2);
+            color: #fca5a5;
+            border: 1px solid rgba(220, 38, 38, 0.3);
+        }
+
+        .admin-btn-danger:hover {
+            background: rgba(220, 38, 38, 0.3);
+            border-color: rgba(220, 38, 38, 0.5);
+        }
+
+        .admin-btn-success {
+            background: rgba(22, 163, 74, 0.2);
+            color: #86efac;
+            border: 1px solid rgba(22, 163, 74, 0.3);
+        }
+
+        .admin-btn-success:hover {
+            background: rgba(22, 163, 74, 0.3);
+            border-color: rgba(22, 163, 74, 0.5);
+        }
+
+        /* Table Styles */
+        .admin-table-container {
+            overflow-x: auto;
+        }
+
+        .admin-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .admin-table th,
+        .admin-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .admin-table th {
+            font-weight: 600;
+            color: #94a3b8;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 0.05em;
+        }
+
+        .admin-table tr:hover td {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        /* Login Overlay */
+        #login-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #0f172a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+        }
+
+        .login-box {
+            background: rgba(30, 41, 59, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 3rem;
+            border-radius: 1.5rem;
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+            backdrop-filter: blur(20px);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Badge Styles */
+        .admin-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        .badge-active {
+            background: rgba(22, 163, 74, 0.2);
+            color: #86efac;
+            border: 1px solid rgba(22, 163, 74, 0.3);
+        }
+
+        .badge-inactive {
+            background: rgba(148, 163, 184, 0.2);
+            color: #cbd5e1;
+            border: 1px solid rgba(148, 163, 184, 0.3);
+        }
+
+        .badge-urgent {
+            background: rgba(220, 38, 38, 0.2);
+            color: #fca5a5;
+            border: 1px solid rgba(220, 38, 38, 0.3);
+        }
+
+        /* Mobile Adjustments */
+        @media (max-width: 768px) {
+            .admin-sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+                box-shadow: 4px 0 20px rgba(0, 0, 0, 0.5);
+            }
+
+            .admin-sidebar.show {
+                transform: translateX(0);
+            }
+
+            .admin-content {
+                margin-left: 0;
+                padding: 1.5rem;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .mobile-close-btn {
+                display: block;
+                position: absolute;
+                top: 1rem;
+                right: 1rem;
+                background: none;
+                border: none;
+                color: #94a3b8;
+                font-size: 1.5rem;
+                cursor: pointer;
+            }
+        }
+
+        @media (min-width: 769px) {
+            .mobile-close-btn {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Login Overlay -->
+    <div id="login-overlay">
+        <div class="login-box">
+            <img src="assets/favicon.png" alt="Logo"
+                style="width: 80px; height: 80px; border-radius: 50%; margin-bottom: 1.5rem;">
+            <h2 style="font-size: 1.5rem; font-weight: 800; margin-bottom: 0.5rem; color: #fff;">ศูนย์บัญชาการ</h2>
+            <p style="color: #94a3b8; margin-bottom: 2rem;">สำหรับผู้ดูแลระบบพรรคนักเรียนเท่านั้น</p>
+            <form id="admin-login-form">
+                <input type="password" id="admin-password" class="admin-input" placeholder="รหัสผ่านผู้ดูแลระบบ"
+                    style="margin-bottom: 1.5rem; text-align: center; font-size: 1.2rem;" required>
+                <button type="submit" class="admin-btn admin-btn-primary"
+                    style="width: 100%; justify-content: center; font-size: 1.1rem;">เข้าสู่ระบบ</button>
+            </form>
+            <a href="index.html"
+                style="display: block; margin-top: 1.5rem; color: #64748b; font-size: 0.9rem; text-decoration: none;">กลับสู่หน้าแรก</a>
+            <p id="login-error" style="color: #fca5a5; margin-top: 1rem; display: none; font-size: 0.9rem;">
+                รหัสผ่านไม่ถูกต้อง</p>
+        </div>
+    </div>
+
+    <div class="admin-layout">
+        <!-- Sidebar -->
+        <aside class="admin-sidebar" id="sidebar">
+            <button class="mobile-close-btn"
+                onclick="document.getElementById('sidebar').classList.remove('show')">✕</button>
+            <div class="admin-brand">
+                <img src="assets/favicon.png" alt="Logo">
+                <div>
+                    <h2>Admin Panel</h2>
+                    <p>พรรคนักเรียน</p>
+                </div>
+            </div>
+
+            <nav class="admin-menu">
+                <div class="admin-menu-item active" data-target="panel-dashboard">
+                    📊 ภาพรวม (Dashboard)
+                </div>
+                <div class="admin-menu-item" data-target="panel-feedback">
+                    💬 กล่องรับความคิดเห็น
+                </div>
+                <div class="admin-menu-item" data-target="panel-polls">
+                    📊 จัดการโพลล์โหวต
+                </div>
+                <div class="admin-menu-item" data-target="panel-announcements">
+                    📢 ประกาศด่วนหน้าเว็บ
+                </div>
+                <div class="admin-menu-item" data-target="panel-efootball">
+                    🎮 ตารางแข็ง/ลงทะเบียน eFootball
+                </div>
+                <div class="admin-menu-item" data-target="panel-ideas">
+                    💡 จัดการบอร์ดไอเดีย
+                </div>
+                <div class="admin-menu-item" data-target="panel-policies">
+                    🛡️ จัดการนโยบายพรรค
+                </div>
+                <div class="admin-menu-item" data-target="panel-members">
+                    👥 จัดการสมาชิกพรรค
+                </div>
+
+                <div style="margin-top: auto;"></div>
+                <div class="admin-menu-item" id="logout-btn" style="color: #fca5a5; margin-top: 2rem;">
+                    🚪 ออกจากระบบ
+                </div>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="admin-content">
+            <div class="admin-header">
+                <div style="display: flex; align-items: center; gap: 1rem;">
+                    <button class="mobile-menu-btn" id="mobile-menu-toggle"
+                        onclick="document.getElementById('sidebar').classList.add('show')">☰</button>
+                    <h1 class="admin-title" id="page-title">ภาพรวมระบบ</h1>
+                </div>
+                <div>
+                    <span style="color: #94a3b8; font-size: 0.9rem;">สถานะระบบ: <span style="color: #86efac;">ออนไลน์
+                            🟢</span></span>
+                </div>
+            </div>
+
+            <!-- Panel: Dashboard -->
+            <div class="admin-panel active" id="panel-dashboard">
+                <div
+                    style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;">
+                    <div class="admin-card" style="margin: 0;">
+                        <div style="color: #94a3b8; font-size: 0.9rem; margin-bottom: 0.5rem;">ความคิดเห็นทั้งหมด</div>
+                        <div style="font-size: 2.5rem; font-weight: 800; color: #fff;" id="stats-feedback">0</div>
+                    </div>
+                    <div class="admin-card" style="margin: 0;">
+                        <div style="color: #94a3b8; font-size: 0.9rem; margin-bottom: 0.5rem;">ผู้สมัคร eFootball</div>
+                        <div style="font-size: 2.5rem; font-weight: 800; color: #fff;" id="stats-efootball">0</div>
+                    </div>
+                    <div class="admin-card" style="margin: 0;">
+                        <div style="color: #94a3b8; font-size: 0.9rem; margin-bottom: 0.5rem;">โพลล์ที่เปิดอยู่</div>
+                        <div style="font-size: 2.5rem; font-weight: 800; color: #fff;" id="stats-polls">0</div>
+                    </div>
+                </div>
+                <div class="admin-card">
+                    <h3 class="admin-card-title">ยินดีต้อนรับสู่ศูนย์บัญชาการ</h3>
+                    <p style="color: #cbd5e1; line-height: 1.6;">
+                        จากหน้านี้คุณสามารถจัดการข้อมูลทุกอย่างบนหน้าเว็บไซต์หลักได้ทันที
+                        ข้อมูลทั้งหมดเชื่อมต่อกับ Firebase Realtime Database หมายความว่าเมื่อคุณกด <b>บันทึก</b>
+                        หน้าเว็บของนักเรียนคนอื่นๆ จะถูกอัปเดตอัตโนมัติ โดยไม่ต้องเข้าไปแก้โค้ด HTML อีกต่อไป
+                    </p>
+                </div>
+            </div>
+
+            <!-- Panel: Feedback -->
+            <div class="admin-panel" id="panel-feedback">
+                <div class="admin-card">
+                    <div class="admin-card-header">
+                        <h3 class="admin-card-title">ความคิดเห็นที่ได้รับ</h3>
+                        <button class="admin-btn admin-btn-success" id="refresh-feedback">🔄 รีเฟรช</button>
+                    </div>
+                    <div class="admin-table-container">
+                        <table class="admin-table" id="feedback-table">
+                            <thead>
+                                <tr>
+                                    <th style="width: 15%">เวลา</th>
+                                    <th style="width: 15%">ชื่อ/ชั้น</th>
+                                    <th style="width: 15%">หมวดหมู่</th>
+                                    <th style="width: 45%">ข้อความ</th>
+                                    <th style="width: 10%">จัดการ</th>
+                                </tr>
+                            </thead>
+                            <tbody id="feedback-list">
+                                <tr>
+                                    <td colspan="5" style="text-align: center; color: #94a3b8;">กำลังโหลดข้อมูล...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Panel: Polls -->
+            <div class="admin-panel" id="panel-polls">
+                <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 1.5rem; align-items: start;">
+                    <!-- Create Poll Form -->
+                    <div class="admin-card">
+                        <h3 class="admin-card-title">สร้างโพลล์ปะทะด่วน</h3>
+                        <form id="create-poll-form">
+                            <div class="admin-form-group">
+                                <label class="admin-label">หัวข้อโพลล์</label>
+                                <input type="text" id="poll-question" class="admin-input"
+                                    placeholder="เช่น: เมนูอาหารกลางวันที่อยากเพิ่ม?" required>
+                            </div>
+                            <div class="admin-form-group">
+                                <label class="admin-label">ตัวเลือกที่ 1</label>
+                                <input type="text" id="poll-opt1" class="admin-input" placeholder="เช่น: ข้าวมันไก่"
+                                    required>
+                            </div>
+                            <div class="admin-form-group">
+                                <label class="admin-label">ตัวเลือกที่ 2</label>
+                                <input type="text" id="poll-opt2" class="admin-input"
+                                    placeholder="เช่น: ก๋วยเตี๋ยวต้มยำ" required>
+                            </div>
+                            <button type="submit" class="admin-btn admin-btn-primary"
+                                style="width: 100%; justify-content: center;">+ เปิดโหวตทันที</button>
+                        </form>
+                    </div>
+
+                    <!-- Active Polls List -->
+                    <div class="admin-card">
+                        <h3 class="admin-card-title">โพลล์ที่เปิดโหวตอยู่บนเว็บ</h3>
+                        <div id="active-polls-list">
+                            <p style="text-align: center; color: #94a3b8; padding: 2rem;">ไม่มีโพลล์ที่เปิดอยู่</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Panel: Idea Board Management -->
+            <div class="admin-panel" id="panel-ideas">
+                <div class="admin-card">
+                    <div class="admin-card-header">
+                        <h3 class="admin-card-title">📝 จัดการไอเดียและคอมเมนต์</h3>
+                    </div>
+                    <div class="admin-table-container">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th style="width: 15%">หมวดหมู่</th>
+                                    <th style="width: 20%">ผู้เสนอ</th>
+                                    <th style="width: 45%">เนื้อหาไอเดีย</th>
+                                    <th style="width: 20%">จัดการ</th>
+                                </tr>
+                            </thead>
+                            <tbody id="admin-ideas-list">
+                                <tr><td colspan="4" style="text-align:center;">กำลังโหลดข้อมูล...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Panel: Members -->
+            <div class="admin-panel" id="panel-members">
+                <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 1.5rem; align-items: start;">
+                    <!-- Create/Edit Member Form -->
+                    <div class="admin-card">
+                        <h3 class="admin-card-title" id="member-form-title">เพิ่มสมาชิกใหม่</h3>
+                        <form id="member-form">
+                            <input type="hidden" id="member-id">
+                            <div class="admin-form-group">
+                                <label class="admin-label">ชื่อเต็ม / ชื่อเล่น</label>
+                                <input type="text" id="member-name" class="admin-input" placeholder="เช่น: นาย ก. (บาส)" required>
+                            </div>
+                            <div class="admin-form-group">
+                                <label class="admin-label">ตำแหน่ง / ชั้นปี</label>
+                                <input type="text" id="member-role" class="admin-input" placeholder="เช่น: รองประธาน (ม.5)" required>
+                            </div>
+                            <div class="admin-form-group">
+                                <label class="admin-label">คติประจำใจ (สั้นๆ)</label>
+                                <input type="text" id="member-quote" class="admin-input" placeholder="เช่น: ทำทุกวันให้ดีที่สุด">
+                            </div>
+                            <div class="admin-form-group">
+                                <label class="admin-label">รูปถ่าย (ย่อขนาดอัตโนมัติ)</label>
+                                <input type="file" id="member-image" class="admin-input" accept="image/*">
+                                <canvas id="member-canvas" style="display:none;"></canvas>
+                                <div id="member-preview-container" style="margin-top: 1rem; display: none;">
+                                    <img id="member-preview" src="" alt="preview" style="max-width: 100px; border-radius: 0.5rem; border: 1px solid rgba(255,255,255,0.1);">
+                                </div>
+                            </div>
+                            <button type="submit" class="admin-btn admin-btn-primary" style="width: 100%; justify-content: center;" id="member-submit-btn">💾 บันทึกสมาชิก</button>
+                            <button type="button" class="admin-btn admin-btn-danger" style="width: 100%; justify-content: center; margin-top: 0.5rem; display: none;" id="member-cancel-btn">❌ ยกเลิก</button>
+                        </form>
+                    </div>
+
+                    <!-- Members List -->
+                    <div class="admin-card">
+                        <div class="admin-card-header">
+                            <h3 class="admin-card-title">รายชื่อสมาชิกปัจจุบัน</h3>
+                            <button class="admin-btn admin-btn-success" id="refresh-members">🔄 รีเฟรช</button>
+                        </div>
+                        <div class="admin-table-container">
+                            <table class="admin-table" id="members-table">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 15%">รูป</th>
+                                        <th style="width: 30%">ชื่อ-นามสกุล</th>
+                                        <th style="width: 30%">ตำแหน่ง</th>
+                                        <th style="width: 25%">จัดการ</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="members-list">
+                                    <tr>
+                                        <td colspan="4" style="text-align: center; color: #94a3b8;">กำลังโหลดข้อมูล...</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Panel: Policies -->
+            <div class="admin-panel" id="panel-policies">
+                <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 1.5rem; align-items: start;">
+                    <!-- Create/Edit Policy Form -->
+                    <div class="admin-card">
+                        <h3 class="admin-card-title" id="policy-form-title">เพิ่มนโยบายใหม่</h3>
+                        <p style="color: #cbd5e1; margin-bottom: 1.5rem; font-size: 0.9rem;">เพิ่มนโยบายโดยใส่ข้อมูลและอัปโหลดรูปภาพ ระบบจะย่อขนาดให้อัตโนมัติ</p>
+                        <form id="policy-form">
+                            <input type="hidden" id="policy-id">
+                            <div class="admin-form-group">
+                                <label class="admin-label">ชื่อนโยบาย</label>
+                                <input type="text" id="policy-title" class="admin-input" placeholder="เช่น: นโยบายลดเศษขยะ" required>
+                            </div>
+                            <div class="admin-form-group">
+                                <label class="admin-label">คำอธิบายสั้นๆ (แสดงหน้าการ์ด)</label>
+                                <textarea id="policy-desc" class="admin-textarea" style="min-height: 80px;" placeholder="เช่น: รณรงค์ให้นักเรียนทิ้งขยะ..." required></textarea>
+                            </div>
+                            <div class="admin-form-group">
+                                <label class="admin-label">รายละเอียดเนื้อหาเต็ม (แสดงหน้าอ่านต่อ)</label>
+                                <textarea id="policy-content" class="admin-textarea" placeholder="รายละเอียดแบบเต็ม..." required></textarea>
+                            </div>
+                            <div class="admin-form-group">
+                                <label class="admin-label">รูปภาพ (อัตโนมัติย่อขนาด ไม่ควรเกิน 2MB)</label>
+                                <input type="file" id="policy-image" class="admin-input" accept="image/*" style="padding: 0.5rem; background: rgba(0,0,0,0.2);">
+                                <!-- Canvas for resizing invisibly -->
+                                <canvas id="policy-canvas" style="display:none;"></canvas>
+                                <div id="policy-preview-container" style="margin-top: 1rem; display: none;">
+                                    <img id="policy-preview" src="" alt="preview" style="max-width: 100%; border-radius: 0.5rem; border: 1px solid rgba(255,255,255,0.1);">
+                                </div>
+                            </div>
+                            <div class="admin-form-group">
+                                <label class="admin-label">หมวดหมู่/ป้ายกำกับ (ตัวอย่าง: [ทำเพื่อนักเรียน])</label>
+                                <input type="text" id="policy-category" class="admin-input" placeholder="[นโยบาย]">
+                            </div>
+                            <button type="submit" class="admin-btn admin-btn-primary" style="width: 100%; justify-content: center;" id="policy-submit-btn">💾 บันทึกนโยบาย</button>
+                            <button type="button" class="admin-btn admin-btn-danger" style="width: 100%; justify-content: center; margin-top: 0.5rem; display: none;" id="policy-cancel-btn">❌ ยกเลิกการแก้ไข / รีเซ็ตฟอร์ม</button>
+                        </form>
+                    </div>
+
+                    <!-- Policies List -->
+                    <div class="admin-card">
+                        <div class="admin-card-header">
+                            <h3 class="admin-card-title">นโยบายปัจจุบัน</h3>
+                            <button class="admin-btn admin-btn-success" id="refresh-policies">🔄 รีเฟรช</button>
+                        </div>
+                        <div class="admin-table-container">
+                            <table class="admin-table" id="policies-table">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 20%">รูปภาพ</th>
+                                        <th style="width: 30%">ชื่อนโยบาย</th>
+                                        <th style="width: 35%">คำอธิบาย</th>
+                                        <th style="width: 15%">จัดการ</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="policies-list">
+                                    <tr>
+                                        <td colspan="4" style="text-align: center; color: #94a3b8;">กำลังโหลดข้อมูล...</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Panel: Announcements -->
+            <div class="admin-panel" id="panel-announcements">
+                <div class="admin-card">
+                    <h3 class="admin-card-title">จัดการประกาศด่วน (แถบสีบนสุดของเว็บ)</h3>
+                    <p style="color: #cbd5e1; margin-bottom: 1.5rem; font-size: 0.9rem;">
+                        ข้อความจะไปปรากฏเป็นแถบสีบนสุดในทุกๆ หน้าของเว็บไซต์ ใช้สำหรับประกาศเรื่องสำคัญมาก
+                    </p>
+                    <form id="announcement-form">
+                        <div class="admin-form-group">
+                            <label class="admin-label">สถานะประกาศ</label>
+                            <select id="ann-status" class="admin-select">
+                                <option value="inactive">ปิดประกาศ (ซ่อนจากหน้าเว็บ)</option>
+                                <option value="active">เปิดใช้งานประกาศ</option>
+                            </select>
+                        </div>
+                        <div class="admin-form-group">
+                            <label class="admin-label">ระดับความสำคัญ (สีแถบคาด)</label>
+                            <select id="ann-type" class="admin-select">
+                                <option value="info">ทั่วไป (แถบสีฟ้า)</option>
+                                <option value="warning">แจ้งเตือน (แถบสีเหลือง/ส้ม)</option>
+                                <option value="urgent">ด่วนมาก/ฉุกเฉิน (แถบสีแดง)</option>
+                            </select>
+                        </div>
+                        <div class="admin-form-group">
+                            <label class="admin-label">ข้อความประกาศ</label>
+                            <textarea id="ann-message" class="admin-textarea"
+                                placeholder="พิมพ์ข้อความประกาศที่นี่..."></textarea>
+                        </div>
+                        <div class="admin-form-group">
+                            <label class="admin-label">ลิงก์เพิ่มเติม (ออปชันอล: ถ้ามีให้กดอ่านต่อ)</label>
+                            <input type="text" id="ann-link" class="admin-input" placeholder="https://...">
+                        </div>
+                        <button type="submit" class="admin-btn admin-btn-primary">💾 บันทึกและอัปเดตหน้าเว็บ</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Panel: eFootball -->
+            <div class="admin-panel" id="panel-efootball">
+                <div style="display: grid; grid-template-columns: 1fr; gap: 1.5rem; align-items: start;">
+                    <!-- Update Score Form -->
+                    <div class="admin-card">
+                        <h3 class="admin-card-title">บันทึกผลการแข่งขัน (แมตช์)</h3>
+                        <p style="font-size: 0.85rem; color: #94a3b8; margin-bottom: 1rem;">เลือกระหว่าง 2 ทีม
+                            และใส่สกอร์ที่แข่งจบ ระบบจะคำนวณ ชนะ/เสมอ/แพ้ และประตูได้เสียให้ตารางคะแนนอัตโนมัติ</p>
+                        <form id="score-form">
+                            <div style="display:flex; flex-direction: column; gap: 1rem; margin-bottom: 1.5rem;">
+
+                                <!-- Team A -->
+                                <div style="display: flex; gap: 1rem; align-items: flex-end;">
+                                    <div style="flex: 1;">
+                                        <label class="admin-label">ทีมเหย้า (Team A)</label>
+                                        <select id="team-a-name" class="admin-input" required>
+                                            <option value="">-- เลือกทีม --</option>
+                                            <option>Arsenal</option>
+                                            <option>Aston Villa</option>
+                                            <option>Bournemouth</option>
+                                            <option>Brentford</option>
+                                            <option>Brighton</option>
+                                            <option>Burnley</option>
+                                            <option>Chelsea</option>
+                                            <option>Crystal Palace</option>
+                                            <option>Everton</option>
+                                            <option>Fulham</option>
+                                            <option>Leeds United</option>
+                                            <option>Liverpool</option>
+                                            <option>Manchester City</option>
+                                            <option>Manchester United</option>
+                                            <option>Newcastle United</option>
+                                            <option>Nottingham Forest</option>
+                                            <option>Sunderland</option>
+                                            <option>Tottenham Hotspur</option>
+                                            <option>West Ham United</option>
+                                            <option>Wolverhampton</option>
+                                        </select>
+                                    </div>
+                                    <div style="width: 100px;">
+                                        <label class="admin-label">สกอร์ที่ได้</label>
+                                        <input type="number" id="team-a-score" class="admin-input" placeholder="0"
+                                            min="0" required
+                                            style="font-size: 1.2rem; font-weight: bold; text-align: center;">
+                                    </div>
+                                </div>
+
+                                <div style="text-align: center; color: #64748b; font-weight: bold;">VS</div>
+
+                                <!-- Team B -->
+                                <div style="display: flex; gap: 1rem; align-items: flex-end;">
+                                    <div style="flex: 1;">
+                                        <label class="admin-label">ทีมเยือน (Team B)</label>
+                                        <select id="team-b-name" class="admin-input" required>
+                                            <option value="">-- เลือกทีม --</option>
+                                            <option>Arsenal</option>
+                                            <option>Aston Villa</option>
+                                            <option>Bournemouth</option>
+                                            <option>Brentford</option>
+                                            <option>Brighton</option>
+                                            <option>Chelsea</option>
+                                            <option>Crystal Palace</option>
+                                            <option>Everton</option>
+                                            <option>Fulham</option>
+                                            <option>Ipswich Town</option>
+                                            <option>Leicester City</option>
+                                            <option>Liverpool</option>
+                                            <option>Manchester City</option>
+                                            <option>Manchester United</option>
+                                            <option>Newcastle United</option>
+                                            <option>Nottingham Forest</option>
+                                            <option>Southampton</option>
+                                            <option>Tottenham Hotspur</option>
+                                            <option>West Ham United</option>
+                                            <option>Wolverhampton</option>
+                                        </select>
+                                    </div>
+                                    <div style="width: 100px;">
+                                        <label class="admin-label">สกอร์ที่ได้</label>
+                                        <input type="number" id="team-b-score" class="admin-input" placeholder="0"
+                                            min="0" required
+                                            style="font-size: 1.2rem; font-weight: bold; text-align: center;">
+                                    </div>
+                                </div>
+                                <!-- Submit Match result -->
+                                <button type="submit" class="admin-btn admin-btn-primary"
+                                    style="width: 100%; justify-content: center; font-size: 1.1rem; padding: 1rem;">
+                                    💾 บันทึกผลการแข่งขัน
+                                </button>
+                            </div>
+                        </form>
+
+                        <!-- Danger Zone: Reset Button -->
+                        <div
+                            style="margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid rgba(255,255,255,0.1);">
+                            <h4 style="color: #f87171; font-size: 0.9rem; margin-bottom: 1rem;">⚠️ Danger Zone</h4>
+                            <button id="btn-reset-scores" class="admin-btn admin-btn-danger"
+                                style="width: 100%; justify-content: center; background: rgba(239, 68, 68, 0.1); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.2);">
+                                🗑️ ล้างตารางคะแนนทั้งหมด (Reset)
+                            </button>
+                        </div>
+                    </div>
+                    <!-- Players List -->
+                    <div class="admin-card">
+                        <div class="admin-card-header">
+                            <h3 class="admin-card-title">รายชื่อผู้สมัครและคะแนนปัจจุบัน</h3>
+                            <button class="admin-btn admin-btn-success" id="refresh-efootball">🔄 รีเฟรช</button>
+                        </div>
+                        <div class="admin-table-container">
+                            <table class="admin-table" id="efootball-table">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 5%">#</th>
+                                        <th style="width: 15%">เวลาสมัคร</th>
+                                        <th style="width: 25%">ชื่อ-นามสกุล (ทีม)</th>
+                                        <th style="width: 10%">ชั้นเรียน</th>
+                                        <th style="width: 15%">eFootball ID</th>
+                                        <th style="width: 20%; text-align: center;">สถิติ (Pts / W-D-L)</th>
+                                        <th style="width: 10%; text-align: center;">จัดการ</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="efootball-list">
+                                    <tr>
+                                        <td colspan="7" style="text-align: center; color: #94a3b8;">กำลังโหลดข้อมูล...
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- Firebase System -->
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js';
+        import { getDatabase, ref, get, set, child, push, remove, onValue, update } from 'https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js';
+
+        // Reuse existing Firebase Config
+        const firebaseConfig = {
+            apiKey: "AIzaSyCzJxqnulMiNH_yyjJhuNwhOKTf49zqmL4",
+            authDomain: "students-party.firebaseapp.com",
+            databaseURL: "https://students-party-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "students-party",
+            storageBucket: "students-party.firebasestorage.app",
+            messagingSenderId: "382151217353",
+            appId: "1:382151217353:web:6e8ec1ad891fc9763c7d18",
+            measurementId: "G-PF2SHZX7FB"
+        };
+
+        const app = initializeApp(firebaseConfig, "admin-dashboard");
+        const db = getDatabase(app);
+
+        /* =================================================================================
+         * AUTHENTICATION
+         * ================================================================================= */
+        // Check login state
+        if (sessionStorage.getItem('admin_logged_in') === 'true') {
+            document.getElementById('login-overlay').style.display = 'none';
+            initAdminDashboard();
+        }
+
+        document.getElementById('admin-login-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const pw = document.getElementById('admin-password').value;
+            // Using the same password logic from previous admin pages
+            if (pw === 'admin250454') {
+                sessionStorage.setItem('admin_logged_in', 'true');
+                document.getElementById('login-overlay').style.display = 'none';
+                initAdminDashboard();
+            } else {
+                document.getElementById('login-error').style.display = 'block';
+            }
+        });
+
+        document.getElementById('logout-btn').addEventListener('click', () => {
+            sessionStorage.removeItem('admin_logged_in');
+            window.location.reload();
+        });
+
+
+        /* =================================================================================
+         * DASHBOARD INIT
+         * ================================================================================= */
+        function initAdminDashboard() {
+            // Navigation Logic
+            const menuItems = document.querySelectorAll('.admin-menu-item[data-target]');
+            const panels = document.querySelectorAll('.admin-panel');
+            const pageTitle = document.getElementById('page-title');
+
+            menuItems.forEach(item => {
+                item.addEventListener('click', () => {
+                    // Remove active from all
+                    menuItems.forEach(m => m.classList.remove('active'));
+                    panels.forEach(p => p.classList.remove('active'));
+
+                    // Add active to clicked
+                    item.classList.add('active');
+                    const targetId = item.getAttribute('data-target');
+                    document.getElementById(targetId).classList.add('active');
+
+                    // Update Title
+                    pageTitle.textContent = item.textContent.replace(/[^\u0E00-\u0E7Fa-zA-Z\s()]/g, '').trim(); // Remove emojis
+
+                    // Close sidebar on mobile after clicking menu item
+                    if (window.innerWidth <= 768) {
+                        document.getElementById('sidebar').classList.remove('show');
+                    }
+                });
+            });
+
+            // Initialize Modules
+            initFeedbackModule();
+            initEfootballModule();
+            initAnnouncementModule();
+            initPollsModule();
+            initPoliciesModule();
+            initMembersModule();
+            initIdeasModule();
+        }
+
+        /* =================================================================================
+         * FEEDBACK MODULE
+         * ================================================================================= */
+        function initFeedbackModule() {
+            const feedbacksRef = ref(db, 'feedbacks');
+
+            // Listen for changes
+            onValue(feedbacksRef, (snapshot) => {
+                const list = document.getElementById('feedback-list');
+                const data = snapshot.val();
+
+                if (!data) {
+                    list.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #94a3b8;">ยังไม่มีความคิดเห็น</td></tr>';
+                    document.getElementById('stats-feedback').textContent = '0';
+                    return;
+                }
+
+                const feedbacksArray = Object.entries(data).map(([id, val]) => ({ id, ...val }));
+                // Sort by newest first
+                feedbacksArray.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+
+                document.getElementById('stats-feedback').textContent = feedbacksArray.length;
+
+                list.innerHTML = '';
+                feedbacksArray.forEach(fb => {
+                    const date = new Date(fb.timestamp || fb.createdAt || Date.now());
+                    const dateStr = date.toLocaleDateString('th-TH') + ' ' + date.toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' });
+
+                    const topicsHtml = (fb.topics || []).map(t => `<span class="admin-badge badge-inactive" style="margin-right:4px;">${t}</span>`).join('');
+
+                    const tr = document.createElement('tr');
+                    const hasReply = !!fb.adminReply;
+                    tr.innerHTML = `
+                        <td style="font-size: 0.85rem; color: #94a3b8;">${dateStr}</td>
+                        <td>
+                            <div style="font-weight: 600;">${fb.name || 'ไม่ระบุชื่อ'}</div>
+                            <div style="font-size: 0.8rem; color: #94a3b8;">${fb.classRoom || '-'}</div>
+                        </td>
+                        <td>${topicsHtml}</td>
+                        <td>
+                            <div style="background: rgba(15,23,42,0.5); padding: 0.75rem; border-radius: 0.5rem; font-size: 0.9rem; margin-bottom: 0.75rem;">
+                                ${fb.message}
+                            </div>
+                            ${fb.rating ? `<div style="margin-top: 0.25rem; color: #f59e0b; font-size: 0.8rem;">คะแนนพึงพอใจ: ${'★'.repeat(fb.rating)}</div>` : ''}
+                            
+                            <div style="margin-top: 1rem; padding-top: 0.75rem; border-top: 1px dotted rgba(255,255,255,0.1);">
+                                <label style="display:block; font-size:0.75rem; color:#94a3b8; margin-bottom:0.4rem;">💬 ตอบกลับจากแอดมิน:</label>
+                                <div style="display: flex; gap: 0.5rem;">
+                                    <textarea class="admin-reply-text" data-id="${fb.id}" 
+                                        style="flex:1; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); border-radius: 0.4rem; color: #fff; padding: 0.5rem; font-size: 0.85rem; min-height: 40px;" 
+                                        placeholder="พิมพ์ข้อความตอบกลับที่นี่...">${fb.adminReply || ''}</textarea>
+                                    <button class="admin-btn admin-btn-success btn-save-reply" data-id="${fb.id}" 
+                                        style="padding: 0 0.75rem; font-size: 0.75rem; height: 38px;">บันทึก</button>
+                                </div>
+                                ${hasReply ? `<div style="font-size: 0.7rem; color: #86efac; margin-top: 0.3rem;">✅ ตอบแล้วเมื่อ ${new Date(fb.replyAt).toLocaleDateString('th-TH')}</div>` : ''}
+                            </div>
+                        </td>
+                        <td>
+                            <button class="admin-btn admin-btn-danger btn-delete-fb" data-id="${fb.id}" style="padding: 0.4rem 0.8rem; font-size: 0.8rem;">ลบ</button>
+                        </td>
+                    `;
+                    list.appendChild(tr);
+                });
+
+                // Attach reply listeners
+                document.querySelectorAll('.btn-save-reply').forEach(btn => {
+                    btn.addEventListener('click', async (e) => {
+                        const id = e.target.getAttribute('data-id');
+                        const textarea = document.querySelector(`.admin-reply-text[data-id="${id}"]`);
+                        const replyContent = textarea.value.trim();
+
+                        // Optimistic UI feedback
+                        const originalText = e.target.textContent;
+                        e.target.disabled = true;
+                        e.target.textContent = '⏳';
+
+                        try {
+                            await update(ref(db, `feedbacks/${id}`), {
+                                adminReply: replyContent,
+                                replyAt: Date.now()
+                            });
+                            e.target.textContent = '✅';
+                            setTimeout(() => {
+                                e.target.textContent = originalText;
+                                e.target.disabled = false;
+                            }, 1500);
+                        } catch (err) {
+                            console.error(err);
+                            alert('ไม่สามารถบันทึกการตอบกลับได้');
+                            e.target.textContent = originalText;
+                            e.target.disabled = false;
+                        }
+                    });
+                });
+
+                // Attach delete listeners
+                document.querySelectorAll('.btn-delete-fb').forEach(btn => {
+                    btn.addEventListener('click', async (e) => {
+                        if (confirm('คุณแน่ใจหรือไม่ว่าต้องการลบความคิดเห็นนี้? (ไม่สามารถกู้คืนได้)')) {
+                            const id = e.target.getAttribute('data-id');
+                            await remove(ref(db, `feedbacks/${id}`));
+                        }
+                    });
+                });
+            });
+
+            document.getElementById('refresh-feedback').addEventListener('click', () => {
+                // Changing to active tab triggers re-render automatically due to onValue, but gives UX feedback
+                document.getElementById('refresh-feedback').textContent = 'กำลังโหลด...';
+                setTimeout(() => document.getElementById('refresh-feedback').textContent = '🔄 รีเฟรช', 500);
+            });
+        }
+
+        /* =================================================================================
+         * EFOOTBALL MODULE
+         * ================================================================================= */
+        function initEfootballModule() {
+            const playersRef = ref(db, 'efootball_players');
+
+            // 1. Listen for changes & Render Table
+            onValue(playersRef, async (snapshot) => {
+                const list = document.getElementById('efootball-list');
+                const data = snapshot.val();
+
+                if (!data) {
+                    list.innerHTML = '<tr><td colspan="7" style="text-align: center; color: #94a3b8;">ยังไม่มีผู้สมัคร</td></tr>';
+                    document.getElementById('stats-efootball').textContent = '0';
+                    return;
+                }
+
+                // Fetch scores node to map real stats to the players
+                let scores = {};
+                try {
+                    const scoresSnap = await get(ref(db, 'efootball_players/team_scores'));
+                    if (scoresSnap.exists()) scores = scoresSnap.val();
+                } catch (e) {
+                    console.error("Failed to fetch scores for table render:", e);
+                }
+
+                const playersArray = Object.entries(data).map(([id, val]) => ({ id, ...val }));
+                playersArray.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+
+                document.getElementById('stats-efootball').textContent = playersArray.length;
+
+                list.innerHTML = '';
+                playersArray.forEach(p => {
+                    const date = new Date(p.createdAt || Date.now());
+                    const dateStr = date.toLocaleDateString('th-TH') + ' ' + date.toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' });
+
+                    const seqStr = p.seqId ? p.seqId : '-';
+                    const teamName = p.teamName || '';
+                    const teamStr = teamName ? `<span style="font-size: 0.85rem; color: #fca311; display: block; margin-top: 0.2rem; font-weight:700;">ทีม: ${teamName}</span>` : '<span style="font-size: 0.8rem; color: #ef4444; display: block; margin-top: 0.2rem;">ยังไม่เลือกทีม</span>';
+
+                    // Get stats directly from the scores node using teamName
+                    const tScore = scores[teamName] || {};
+                    const won = tScore.won || 0;
+                    const drawn = tScore.drawn || 0;
+                    const lost = tScore.lost || 0;
+                    const gf = tScore.gf || 0;
+                    const ga = tScore.ga || 0;
+                    const gd = gf - ga;
+                    const pts = (won * 3) + (drawn * 1);
+
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td style="font-weight: 800; color: #86efac; font-size: 1.1rem;">${seqStr}</td>
+                        <td style="font-size: 0.85rem; color: #94a3b8;">${dateStr}</td>
+                        <td>
+                            <div style="font-weight: 600; color: #fff;">${p.name}</div>
+                            ${teamStr}
+                        </td>
+                        <td>${p.className}</td>
+                        <td style="font-family: monospace; color: #86efac;">${p.gameId}</td>
+                        <td style="text-align: center;">
+                            <span class="admin-badge badge-active" style="display:inline-block; margin-bottom:0.25rem;">${pts} Pts</span>
+                            <div style="font-size:0.75rem; color:#cbd5e1; font-weight:600;">
+                                <span style="color:#10b981;">${won}</span>W -
+                                <span style="color:#94a3b8;">${drawn}</span>D -
+                                <span style="color:#ef4444;">${lost}</span>L
+                            </div>
+                            <div style="font-size:0.7rem; color:#64748b; margin-top:0.1rem;">(GD ${gd > 0 ? '+' + gd : gd})</div>
+                        </td>
+                        <td style="text-align: center;">
+                            <button class="admin-btn admin-btn-danger btn-delete-player" data-id="${p.id}" style="padding: 0.4rem 0.8rem; font-size: 0.8rem;">ลบ</button>
+                        </td>
+                    `;
+                    list.appendChild(tr);
+                });
+
+                document.querySelectorAll('.btn-delete-player').forEach(btn => {
+                    btn.addEventListener('click', async (e) => {
+                        if (confirm('ต้องการลบผู้สมัครคนนี้ออกจากการแข่งขันใช่หรือไม่?')) {
+                            const id = e.target.getAttribute('data-id');
+                            await remove(ref(db, `efootball_players/${id}`));
+                        }
+                    });
+                });
+            });
+
+            // 2. Score Update Form Submission (Match Result)
+            document.getElementById('score-form').addEventListener('submit', async (e) => {
+                e.preventDefault();
+
+                const teamA = document.getElementById('team-a-name').value;
+                const scoreA = parseInt(document.getElementById('team-a-score').value) || 0;
+
+                const teamB = document.getElementById('team-b-name').value;
+                const scoreB = parseInt(document.getElementById('team-b-score').value) || 0;
+
+                if (!teamA || !teamB) { alert('กรุณาเลือกทีมให้ครบทั้ง 2 ทีม'); return; }
+                if (teamA === teamB) { alert('ไม่สามารถเลือกทีมเดียวกันแข่งกันเองได้'); return; }
+
+                const btn = e.target.querySelector('button[type="submit"]');
+                const ogText = btn.textContent;
+                btn.disabled = true;
+                btn.textContent = '⏳ กำลังประมวลผลให้ทั้ง 2 ทีม...';
+
+                try {
+                    // Fetch existing data for both teams to increment their stats
+                    const snapshotA = await get(ref(db, `efootball_players/team_scores/${teamA}`));
+                    const dataA = snapshotA.exists() ? snapshotA.val() : { won: 0, drawn: 0, lost: 0, gf: 0, ga: 0 };
+
+                    const snapshotB = await get(ref(db, `efootball_players/team_scores/${teamB}`));
+                    const dataB = snapshotB.exists() ? snapshotB.val() : { won: 0, drawn: 0, lost: 0, gf: 0, ga: 0 };
+
+                    // Calculate Match Results
+                    let aWin = 0, aDraw = 0, aLoss = 0;
+                    let bWin = 0, bDraw = 0, bLoss = 0;
+
+                    if (scoreA > scoreB) {
+                        aWin = 1; bLoss = 1;
+                    } else if (scoreA < scoreB) {
+                        aLoss = 1; bWin = 1;
+                    } else {
+                        aDraw = 1; bDraw = 1;
+                    }
+
+                    // Prepare atomic updates
+                    const updates = {};
+                    const lastUpdate = Date.now();
+
+                    updates[`efootball_players/team_scores/${teamA}`] = {
+                        won: (dataA.won || 0) + aWin,
+                        drawn: (dataA.drawn || 0) + aDraw,
+                        lost: (dataA.lost || 0) + aLoss,
+                        gf: (dataA.gf || 0) + scoreA,
+                        ga: (dataA.ga || 0) + scoreB,
+                        lastMatchDate: lastUpdate
+                    };
+
+                    updates[`efootball_players/team_scores/${teamB}`] = {
+                        won: (dataB.won || 0) + bWin,
+                        drawn: (dataB.drawn || 0) + bDraw,
+                        lost: (dataB.lost || 0) + bLoss,
+                        gf: (dataB.gf || 0) + scoreB,
+                        ga: (dataB.ga || 0) + scoreA,
+                        lastMatchDate: lastUpdate
+                    };
+
+                    // Perform the atomic update
+                    await update(ref(db), updates);
+
+                    alert(`✅ บันทึกผลแมตช์: ${teamA} [${scoreA}] - [${scoreB}] ${teamB} เรียบร้อยแล้ว! ตารางคะแนนได้รับการอัปเดตอัตโนมัติ`);
+                    e.target.reset();
+                } catch (err) {
+                    console.error(err);
+                    alert('เกิดข้อผิดพลาดในการบันทึกข้อมูล (Firebase Error): ' + err.message);
+                } finally {
+                    btn.disabled = false;
+                    btn.textContent = ogText;
+                }
+            });
+
+            // Handle Reset Button
+            document.getElementById('btn-reset-scores').addEventListener('click', async () => {
+                const step1 = confirm('⚠️ คำเตือน: คุณแน่ใจหรือไม่ว่าต้องการ "รีเซ็ตตารางคะแนน" ทั้งหมด? ข้อมูลสถิติของทุกทีมจะถูกลบพ้นระบบทันที');
+                if (step1) {
+                    const step2 = confirm('ยืนยันอีกครั้ง: การกระทำนี้ไม่สามารถย้อนคืนได้ ตารางคะแนนจะกลายเป็น 0 ในทุกหน้าเว็บ คุณต้องการดำเนินการต่อหรือไม่?');
+                    if (step2) {
+                        try {
+                            await remove(ref(db, 'efootball_players/team_scores'));
+                            alert('✅ รีเซ็ตตารางคะแนนเรียบร้อยแล้ว');
+                        } catch (err) {
+                            console.error(err);
+                            alert('เกิดข้อผิดพลาดในการรีเซ็ต: ' + err.message);
+                        }
+                    }
+                }
+            });
+            // 3. Migrate old localstorage data to firebase just once if it exists
+            const localPlayers = JSON.parse(localStorage.getItem('efootball-players') || '[]');
+            if (localPlayers.length > 0) {
+                if (confirm(`พบข้อมูลผู้สมัคร eFootball ในเครื่องเก่าจำนวน ${localPlayers.length} คน ต้องการโอนเข้าระบบ Firebase ทันทีหรือไม่?`)) {
+                    localPlayers.forEach(async (p) => {
+                        await push(playersRef, {
+                            name: p.name,
+                            className: p.class,
+                            gameId: p.id,
+                            createdAt: Date.now(),
+                            // Initialize new score fields for migrated players too
+                            scorePts: 0,
+                            scoreWin: 0,
+                            scoreLoss: 0
+                        });
+                    });
+                    localStorage.removeItem('efootball-players'); // clear local
+                    alert('โอนข้อมูลสำเร็จ!');
+                }
+            }
+        }
+
+        /* =================================================================================
+         * ANNOUNCEMENT MODULE
+         * ================================================================================= */
+        function initAnnouncementModule() {
+            const annRef = ref(db, 'global_announcement');
+            const form = document.getElementById('announcement-form');
+
+            // Load current announcement
+            onValue(annRef, (snapshot) => {
+                const data = snapshot.val();
+                if (data) {
+                    document.getElementById('ann-status').value = data.active ? 'active' : 'inactive';
+                    document.getElementById('ann-type').value = data.type || 'info';
+                    document.getElementById('ann-message').value = data.message || '';
+                    document.getElementById('ann-link').value = data.link || '';
+                }
+            });
+
+            // Save changes
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const btn = form.querySelector('button[type="submit"]');
+                btn.textContent = 'กำลังบันทึก...';
+
+                try {
+                    await set(annRef, {
+                        active: document.getElementById('ann-status').value === 'active',
+                        type: document.getElementById('ann-type').value,
+                        message: document.getElementById('ann-message').value.trim(),
+                        link: document.getElementById('ann-link').value.trim(),
+                        updatedAt: Date.now()
+                    });
+                    btn.textContent = '✅ บันทึกสำเร็จ';
+                    setTimeout(() => btn.textContent = '💾 บันทึกและอัปเดตหน้าเว็บ', 2000);
+                } catch (err) {
+                    console.error(err);
+                    alert("เกิดข้อผิดพลาดในการบันทัก");
+                    btn.textContent = '💾 บันทึกและอัปเดตหน้าเว็บ';
+                }
+            });
+        }
+
+        /* =================================================================================
+         * POLLS MODULE
+         * ================================================================================= */
+        function initPollsModule() {
+            const pollsRef = ref(db, 'active_polls');
+
+            // Handle Form
+            document.getElementById('create-poll-form').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const q = document.getElementById('poll-question').value.trim();
+                const o1 = document.getElementById('poll-opt1').value.trim();
+                const o2 = document.getElementById('poll-opt2').value.trim();
+
+                if (!q || !o1 || !o2) return;
+
+                try {
+                    await push(pollsRef, {
+                        question: q,
+                        options: {
+                            opt1: { text: o1, votes: 0 },
+                            opt2: { text: o2, votes: 0 }
+                        },
+                        active: true,
+                        createdAt: Date.now()
+                    });
+                    document.getElementById('create-poll-form').reset();
+                } catch (err) {
+                    console.error("Failed to create poll", err);
+                    alert("ล้มเหลวในการสร้างโพลล์");
+                }
+            });
+
+            // Handle Active Polls List Rendering
+            onValue(pollsRef, (snapshot) => {
+                const list = document.getElementById('active-polls-list');
+                const data = snapshot.val();
+
+                if (!data) {
+                    list.innerHTML = '<p style="text-align: center; color: #94a3b8; padding: 2rem;">ไม่มีโพลล์ที่เปิดอยู่</p>';
+                    document.getElementById('stats-polls').textContent = '0';
+                    return;
+                }
+
+                const pollsArray = Object.entries(data).map(([id, val]) => ({ id, ...val }));
+                const activePolls = pollsArray.filter(p => p.active);
+
+                document.getElementById('stats-polls').textContent = activePolls.length;
+
+                list.innerHTML = '';
+                pollsArray.sort((a, b) => b.createdAt - a.createdAt).forEach(poll => {
+                    const totalVotes = (poll.options.opt1?.votes || 0) + (poll.options.opt2?.votes || 0);
+
+                    const card = document.createElement('div');
+                    card.style.background = "rgba(15,23,42,0.6)";
+                    card.style.border = "1px solid rgba(255,255,255,0.05)";
+                    card.style.padding = "1rem";
+                    card.style.borderRadius = "0.75rem";
+                    card.style.marginBottom = "1rem";
+                    card.style.position = "relative";
+
+                    const statusBadge = poll.active
+                        ? `<span class="admin-badge badge-active" style="position:absolute; top:1rem; right:1rem;">กำลังเปิดโหวต</span>`
+                        : `<span class="admin-badge badge-inactive" style="position:absolute; top:1rem; right:1rem;">ปิดโหวตแล้ว</span>`;
+
+                    card.innerHTML = `
+                        ${statusBadge}
+                        <h4 style="margin: 0 0 1rem 0; font-size: 1rem; color: #fff; padding-right: 80px;">${poll.question}</h4>
+                        <div style="font-size: 0.85rem; color: #94a3b8; margin-bottom: 0.5rem;">คะแนนรวม: ${totalVotes} โหวต</div>
+                        
+                        <div style="background: rgba(255,255,255,0.02); padding: 0.5rem; border-radius: 0.5rem; margin-bottom: 0.5rem; display: flex; justify-content: space-between;">
+                            <span>A: ${poll.options.opt1?.text}</span>
+                            <strong style="color: var(--color-primary);">${poll.options.opt1?.votes || 0}</strong>
+                        </div>
+                        <div style="background: rgba(255,255,255,0.02); padding: 0.5rem; border-radius: 0.5rem; margin-bottom: 1rem; display: flex; justify-content: space-between;">
+                            <span>B: ${poll.options.opt2?.text}</span>
+                            <strong style="color: var(--color-accent);">${poll.options.opt2?.votes || 0}</strong>
+                        </div>
+                        
+                        <div style="display: flex; gap: 0.5rem;">
+                            ${poll.active
+                            ? `<button class="admin-btn admin-btn-danger btn-toggle-poll" data-id="${poll.id}" data-active="true" style="padding: 0.3rem 0.6rem; font-size: 0.8rem;">ปิดรับโหวต</button>`
+                            : `<button class="admin-btn admin-btn-success btn-toggle-poll" data-id="${poll.id}" data-active="false" style="padding: 0.3rem 0.6rem; font-size: 0.8rem;">เปิดอีกครั้ง</button>`
+                        }
+                            <button class="admin-btn admin-btn-danger btn-delete-poll" data-id="${poll.id}" style="padding: 0.3rem 0.6rem; font-size: 0.8rem; background: transparent; border-color: rgba(255,255,255,0.1); color: #94a3b8;">ลบถาวร</button>
+                        </div>
+                    `;
+                    list.appendChild(card);
+                });
+
+                // Attach Action Listeners
+                document.querySelectorAll('.btn-toggle-poll').forEach(btn => {
+                    btn.addEventListener('click', async (e) => {
+                        const id = e.target.getAttribute('data-id');
+                        const currentlyActive = e.target.getAttribute('data-active') === 'true';
+                        await update(ref(db, `active_polls/${id}`), { active: !currentlyActive });
+                    });
+                });
+
+                document.querySelectorAll('.btn-delete-poll').forEach(btn => {
+                    btn.addEventListener('click', async (e) => {
+                        if (confirm('นำโพลล์นี้ออกจากระบบถาวร?')) {
+                            const id = e.target.getAttribute('data-id');
+                            await remove(ref(db, `active_polls/${id}`));
+                        }
+                    });
+                });
+            });
+        }
+
+        /* =================================================================================
+         * POLICIES MODULE
+         * ================================================================================= */
+        function initPoliciesModule() {
+            const policiesRef = ref(db, 'policies');
+            const form = document.getElementById('policy-form');
+            const imageInput = document.getElementById('policy-image');
+            const previewImage = document.getElementById('policy-preview');
+            const previewContainer = document.getElementById('policy-preview-container');
+            let base64Image = '';
+
+            // Handle image selection and resize
+            imageInput.addEventListener('change', (e) => {
+                const file = e.target.files[0];
+                if (!file) return;
+
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    const img = new Image();
+                    img.onload = () => {
+                        const canvas = document.getElementById('policy-canvas');
+                        const ctx = canvas.getContext('2d');
+                        
+                        // Resize to max 800px width/height to save space in Firebase
+                        const MAX_SIZE = 800;
+                        let width = img.width;
+                        let height = img.height;
+                        if (width > height) {
+                            if (width > MAX_SIZE) {
+                                height *= MAX_SIZE / width;
+                                width = MAX_SIZE;
+                            }
+                        } else {
+                            if (height > MAX_SIZE) {
+                                width *= MAX_SIZE / height;
+                                height = MAX_SIZE;
+                            }
+                        }
+                        
+                        canvas.width = width;
+                        canvas.height = height;
+                        ctx.drawImage(img, 0, 0, width, height);
+                        
+                        // Compress the image
+                        base64Image = canvas.toDataURL('image/jpeg', 0.8);
+                        
+                        previewImage.src = base64Image;
+                        previewContainer.style.display = 'block';
+                    };
+                    img.src = event.target.result;
+                };
+                reader.readAsDataURL(file);
+            });
+
+            // Form Submit
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const id = document.getElementById('policy-id').value;
+                const title = document.getElementById('policy-title').value.trim();
+                const desc = document.getElementById('policy-desc').value.trim();
+                const content = document.getElementById('policy-content').value.trim();
+                const category = document.getElementById('policy-category').value.trim();
+                const btn = document.getElementById('policy-submit-btn');
+                
+                if (!title || !desc || !content) return;
+                
+                // Keep old image if missing during edit
+                if (!base64Image && previewImage.src && !previewImage.src.endsWith('preview')) {
+                    base64Image = previewImage.src;
+                }
+
+                btn.textContent = '⏳ กำลังบันทึก...';
+                btn.disabled = true;
+
+                try {
+                    const policyData = {
+                        title,
+                        description: desc,
+                        content,
+                        category: category || '[นโยบาย]',
+                        imageUrl: base64Image,
+                        updatedAt: Date.now()
+                    };
+
+                    if (id) {
+                        await update(ref(db, `policies/${id}`), policyData);
+                    } else {
+                        policyData.createdAt = Date.now();
+                        await push(policiesRef, policyData);
+                    }
+                    
+                    form.reset();
+                    document.getElementById('policy-id').value = '';
+                    base64Image = '';
+                    previewContainer.style.display = 'none';
+                    previewImage.src = '';
+                    document.getElementById('policy-form-title').textContent = 'เพิ่มนโยบายใหม่';
+                    document.getElementById('policy-cancel-btn').style.display = 'none';
+                    btn.textContent = '✅ บันทึกสำเร็จ';
+                    setTimeout(() => { btn.textContent = '💾 บันทึกนโยบาย'; btn.disabled = false; }, 1500);
+
+                } catch (err) {
+                    console.error("Failed to save policy", err);
+                    alert("ล้มเหลวในการบันทึกนโยบาย: " + err.message);
+                    btn.textContent = '💾 บันทึกนโยบาย';
+                    btn.disabled = false;
+                }
+            });
+
+            // Cancel Edit
+            document.getElementById('policy-cancel-btn').addEventListener('click', () => {
+                form.reset();
+                document.getElementById('policy-id').value = '';
+                base64Image = '';
+                previewContainer.style.display = 'none';
+                previewImage.src = '';
+                document.getElementById('policy-form-title').textContent = 'เพิ่มนโยบายใหม่';
+                document.getElementById('policy-cancel-btn').style.display = 'none';
+                document.getElementById('policy-submit-btn').textContent = '💾 บันทึกนโยบาย';
+            });
+
+            // Display List
+            onValue(policiesRef, (snapshot) => {
+                const list = document.getElementById('policies-list');
+                const data = snapshot.val();
+
+                if (!data) {
+                    list.innerHTML = '<tr><td colspan="4" style="text-align: center; color: #94a3b8;">ยังไม่มีนโยบาย</td></tr>';
+                    return;
+                }
+
+                const policiesArray = Object.entries(data).map(([id, val]) => ({ id, ...val }));
+                list.innerHTML = '';
+                
+                policiesArray.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0)).forEach(p => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td>
+                            <div style="width: 80px; height: 60px; border-radius: 0.5rem; overflow: hidden; background: #000;">
+                                <img src="${p.imageUrl || ''}" alt="${p.title}" style="width: 100%; height: 100%; object-fit: cover;">
+                            </div>
+                        </td>
+                        <td>
+                            <div style="font-weight: 700; color: #fff;">${p.title}</div>
+                            <span class="admin-badge badge-inactive" style="margin-top: 0.25rem;">${p.category || 'ทั่วไป'}</span>
+                        </td>
+                        <td>
+                            <div style="font-size: 0.85rem; color: #cbd5e1; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
+                                ${p.description}
+                            </div>
+                        </td>
+                        <td>
+                            <div style="display: flex; gap: 0.5rem;">
+                                <button class="admin-btn admin-btn-primary btn-edit-policy" style="padding: 0.3rem 0.6rem; font-size: 0.8rem;">แก้ไข</button>
+                                <button class="admin-btn admin-btn-danger btn-delete-policy" style="padding: 0.3rem 0.6rem; font-size: 0.8rem;">ลบ</button>
+                            </div>
+                        </td>
+                    `;
+                    
+                    tr.querySelector('.btn-edit-policy').addEventListener('click', () => {
+                        document.getElementById('policy-id').value = p.id;
+                        document.getElementById('policy-title').value = p.title || '';
+                        document.getElementById('policy-desc').value = p.description || '';
+                        document.getElementById('policy-content').value = p.content || '';
+                        document.getElementById('policy-category').value = p.category || '';
+                        
+                        if (p.imageUrl) {
+                            previewImage.src = p.imageUrl;
+                            previewContainer.style.display = 'block';
+                            base64Image = p.imageUrl;
+                        } else {
+                            previewImage.src = '';
+                            previewContainer.style.display = 'none';
+                            base64Image = '';
+                        }
+                        
+                        document.getElementById('policy-form-title').textContent = 'แก้ไขนโยบาย';
+                        document.getElementById('policy-submit-btn').textContent = '💾 อัปเดตนโยบาย';
+                        document.getElementById('policy-cancel-btn').style.display = 'flex';
+                        
+                        document.getElementById('panel-policies').scrollIntoView({ behavior: 'smooth' });
+                    });
+                    
+                    tr.querySelector('.btn-delete-policy').addEventListener('click', async () => {
+                        if (confirm('คุณแน่ใจหรือไม่ว่าต้องการลบนโยบายนี้?')) {
+                            await remove(ref(db, `policies/${p.id}`));
+                            if (document.getElementById('policy-id').value === p.id) {
+                                document.getElementById('policy-cancel-btn').click();
+                            }
+                        }
+                    });
+                    
+                    list.appendChild(tr);
+                });
+            });
+
+            document.getElementById('refresh-policies').addEventListener('click', () => {
+                document.getElementById('refresh-policies').textContent = 'กำลังโหลด...';
+                setTimeout(() => document.getElementById('refresh-policies').textContent = '🔄 รีเฟรช', 500);
+            });
+        }
+
+        /* =================================================================================
+         * MEMBERS MODULE
+         * ================================================================================= */
+        function initMembersModule() {
+            const membersRef = ref(db, 'members');
+            const form = document.getElementById('member-form');
+            const imageInput = document.getElementById('member-image');
+            const previewImage = document.getElementById('member-preview');
+            const previewContainer = document.getElementById('member-preview-container');
+            let base64Image = '';
+
+            imageInput.addEventListener('change', (e) => {
+                const file = e.target.files[0];
+                if (!file) return;
+
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    const img = new Image();
+                    img.onload = () => {
+                        const canvas = document.getElementById('member-canvas');
+                        const ctx = canvas.getContext('2d');
+                        
+                        const MAX_SIZE = 500; // Smaller size for members
+                        let width = img.width;
+                        let height = img.height;
+                        if (width > height) {
+                            if (width > MAX_SIZE) {
+                                height *= MAX_SIZE / width;
+                                width = MAX_SIZE;
+                            }
+                        } else {
+                            if (height > MAX_SIZE) {
+                                width *= MAX_SIZE / height;
+                                height = MAX_SIZE;
+                            }
+                        }
+                        
+                        canvas.width = width;
+                        canvas.height = height;
+                        ctx.drawImage(img, 0, 0, width, height);
+                        
+                        base64Image = canvas.toDataURL('image/jpeg', 0.8);
+                        previewImage.src = base64Image;
+                        previewContainer.style.display = 'block';
+                    };
+                    img.src = event.target.result;
+                };
+                reader.readAsDataURL(file);
+            });
+
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const id = document.getElementById('member-id').value;
+                const name = document.getElementById('member-name').value.trim();
+                const role = document.getElementById('member-role').value.trim();
+                const quote = document.getElementById('member-quote').value.trim();
+                const btn = document.getElementById('member-submit-btn');
+                
+                if (!name || !role) return;
+                
+                if (!base64Image && previewImage.src && !previewImage.src.endsWith('preview')) {
+                    base64Image = previewImage.src;
+                }
+
+                btn.textContent = '⏳ กำลังบันทึก...';
+                btn.disabled = true;
+
+                try {
+                    const memberData = {
+                        name,
+                        role,
+                        quote,
+                        imageUrl: base64Image,
+                        updatedAt: Date.now()
+                    };
+
+                    if (id) {
+                        await update(ref(db, `members/${id}`), memberData);
+                    } else {
+                        memberData.createdAt = Date.now();
+                        await push(membersRef, memberData);
+                    }
+                    
+                    form.reset();
+                    document.getElementById('member-id').value = '';
+                    base64Image = '';
+                    previewContainer.style.display = 'none';
+                    previewImage.src = '';
+                    document.getElementById('member-form-title').textContent = 'เพิ่มสมาชิกใหม่';
+                    document.getElementById('member-cancel-btn').style.display = 'none';
+                    btn.textContent = '✅ บันทึกสำเร็จ';
+                    setTimeout(() => { btn.textContent = '💾 บันทึกสมาชิก'; btn.disabled = false; }, 1500);
+
+                } catch (err) {
+                    console.error("Failed to save member", err);
+                    alert("ล้มเหลวในการบันทึก: " + err.message);
+                    btn.textContent = '💾 บันทึกสมาชิก';
+                    btn.disabled = false;
+                }
+            });
+
+            document.getElementById('member-cancel-btn').addEventListener('click', () => {
+                form.reset();
+                document.getElementById('member-id').value = '';
+                base64Image = '';
+                previewContainer.style.display = 'none';
+                previewImage.src = '';
+                document.getElementById('member-form-title').textContent = 'เพิ่มสมาชิกใหม่';
+                document.getElementById('member-cancel-btn').style.display = 'none';
+                document.getElementById('member-submit-btn').textContent = '💾 บันทึกสมาชิก';
+            });
+
+            onValue(membersRef, (snapshot) => {
+                const list = document.getElementById('members-list');
+                const data = snapshot.val();
+
+                if (!data) {
+                    list.innerHTML = '<tr><td colspan="4" style="text-align: center; color: #94a3b8;">ยังไม่มีข้อมูลสมาชิก</td></tr>';
+                    return;
+                }
+
+                const membersArray = Object.entries(data).map(([id, val]) => ({ id, ...val }));
+                list.innerHTML = '';
+                
+                membersArray.sort((a, b) => (a.createdAt || 0) - (b.createdAt || 0)).forEach(m => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td>
+                            <div style="width: 50px; height: 50px; border-radius: 50%; overflow: hidden; background: #334155; border: 2px solid var(--color-primary);">
+                                <img src="${m.imageUrl || 'assets/favicon.png'}" alt="img" style="width: 100%; height: 100%; object-fit: cover;">
+                            </div>
+                        </td>
+                        <td>
+                            <div style="font-weight: 700; color: #fff;">${m.name}</div>
+                            ${m.quote ? `<div style="font-size: 0.8rem; color: #94a3b8; font-style: italic;">"${m.quote}"</div>` : ''}
+                        </td>
+                        <td>
+                            <span class="admin-badge badge-active">${m.role}</span>
+                        </td>
+                        <td>
+                            <div style="display: flex; gap: 0.5rem;">
+                                <button class="admin-btn admin-btn-primary btn-edit-member" style="padding: 0.3rem 0.6rem; font-size: 0.8rem;">แก้ไข</button>
+                                <button class="admin-btn admin-btn-danger btn-delete-member" style="padding: 0.3rem 0.6rem; font-size: 0.8rem;">ลบ</button>
+                            </div>
+                        </td>
+                    `;
+                    
+                    tr.querySelector('.btn-edit-member').addEventListener('click', () => {
+                        document.getElementById('member-id').value = m.id;
+                        document.getElementById('member-name').value = m.name || '';
+                        document.getElementById('member-role').value = m.role || '';
+                        document.getElementById('member-quote').value = m.quote || '';
+                        
+                        if (m.imageUrl) {
+                            previewImage.src = m.imageUrl;
+                            previewContainer.style.display = 'block';
+                            base64Image = m.imageUrl;
+                        } else {
+                            previewImage.src = '';
+                            previewContainer.style.display = 'none';
+                            base64Image = '';
+                        }
+                        
+                        document.getElementById('member-form-title').textContent = 'แก้ไขข้อมูลสมาชิก';
+                        document.getElementById('member-submit-btn').textContent = '💾 อัปเดตข้อมูล';
+                        document.getElementById('member-cancel-btn').style.display = 'flex';
+                        document.getElementById('panel-members').scrollIntoView({ behavior: 'smooth' });
+                    });
+                    
+                    tr.querySelector('.btn-delete-member').addEventListener('click', async () => {
+                        if (confirm('คุณแน่ใจหรือไม่ว่าต้องการลบสมาชิกคนนี้?')) {
+                            await remove(ref(db, `members/${m.id}`));
+                            if (document.getElementById('member-id').value === m.id) {
+                                document.getElementById('member-cancel-btn').click();
+                            }
+                        }
+                    });
+                    list.appendChild(tr);
+                });
+            });
+
+            document.getElementById('refresh-members').addEventListener('click', () => {
+                document.getElementById('refresh-members').textContent = 'กำลังโหลด...';
+                setTimeout(() => document.getElementById('refresh-members').textContent = '🔄 รีเฟรช', 500);
+            });
+        }
+
+        /* =================================================================================
+         * IDEAS MODULE
+         * ================================================================================= */
+        function initIdeasModule() {
+            const ideasRef = ref(db, 'student_ideas');
+            const list = document.getElementById('admin-ideas-list');
+
+            onValue(ideasRef, (snapshot) => {
+                const data = snapshot.val();
+                if (!data) {
+                    list.innerHTML = '<tr><td colspan="4" style="text-align: center; color: #94a3b8;">ยังไม่มีไอเดีย</td></tr>';
+                    return;
+                }
+
+                const ideasArray = Object.entries(data).map(([id, val]) => ({ id, ...val }));
+                ideasArray.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+
+                list.innerHTML = '';
+                ideasArray.forEach(idea => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td><span class="admin-badge badge-active">${idea.category}</span></td>
+                        <td style="color: #fff; font-weight: 700;">${idea.author}</td>
+                        <td style="color: #cbd5e1; font-size: 0.9rem;">${idea.text}</td>
+                        <td>
+                            <button class="admin-btn admin-btn-danger btn-delete-idea" data-id="${idea.id}" style="padding: 0.3rem 0.6rem; font-size: 0.8rem;">ลบถาวร</button>
+                        </td>
+                    `;
+                    list.appendChild(tr);
+                });
+
+                document.querySelectorAll('.btn-delete-idea').forEach(btn => {
+                    btn.addEventListener('click', async (e) => {
+                        const id = e.target.getAttribute('data-id');
+                        if (confirm('คุณต้องการลบไอเดียนี้และคอมเมนต์ทั้งหมดที่เกี่ยวข้องถาวรหรือไม่?')) {
+                            try {
+                                await remove(ref(db, `student_ideas/${id}`));
+                                await remove(ref(db, `idea_comments/${id}`)); // Also cleanup comments
+                                alert('ลบสำเร็จแล้ว');
+                            } catch (err) {
+                                console.error(err);
+                            }
+                        }
+                    });
+                });
+            });
+        }
+    </script>
+</body>
+
+</html>
